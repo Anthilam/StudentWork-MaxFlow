@@ -1,27 +1,29 @@
 
 # Makefile 5 --- Contruction de la liste des sources et objets ---
 
+# Variables propres a cette applie
+MAIN = main
+INCLUDE = ./INCLUDE/
+SRC = ./SRC/
+OBJ = ./OBJ/
+
 # Variables
 CC = gcc -g
 CFLAGS = -O4 -W -Wall
-CPPFLAGS = -I.
+CPPFLAGS = -I$(INCLUDE)
 LDLIBS = -lm
 
-# Variables propres a cette applie
-MAIN = main
-SRC = ./SRC/main.c
-OBJ = $(SRC:.c=.o)
 
 # cible principale
 all : $(MAIN)
 
 # Regle principale avec l'edition de lien
-main : $(OBJ)
+main : $(OBJ)main.o $(OBJ)list.o
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o 	$@ $^ $(LDLIBS) 
 
 # Regle de construction des .o
-%.o : %.c %.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $<
+$(OBJ)%.o : $(SRC)%.c $(INCLUDE)%.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # Nettoyage des fichiers intermediaires
 clean : 
