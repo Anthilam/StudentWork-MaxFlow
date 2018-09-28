@@ -31,8 +31,6 @@ int main() {
 	first.nextNeighbour = malloc(sizeof(struct Neighbour));
 	first.nextNeighbour = &second;
 
-	printf("%d\n",first.neighbour);
-	printf("%d\n",second.neighbour);
 
 	second.previousNeighbour = malloc(sizeof(struct Neighbour));
 	second.previousNeighbour = &first;

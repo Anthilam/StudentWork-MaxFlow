@@ -37,26 +37,22 @@ void neighbour_add_back(struct Neighbour *self, int value, int weight){
  * Destroy a list
  */
 void neighbour_destroy(struct Neighbour *self){
-	if(self->previousNeighbour != NULL){
-		neighbour_destroy(self->previousNeighbour);
-	}
+	self->neighbour = 0;
+	self->weight = 0;
+	self->nextNeighbour = NULL;
+	self->previousNeighbour = NULL;
 	free(self);
-	if(self->nextNeighbour != NULL){
-		neighbour_destroy(self->nextNeighbour);
-	}
-
 }
 
 /*
 * Go to the first neighbour from a neighbour
 */
 void neighbour_go_first(struct Neighbour *self, struct Neighbour *empty){
-	/*struct Neighbour curr, previous;
-	while(curr->previousNeighbour != NULL){
-
-	}*/
-
-	
+	if(self->previousNeighbour!=NULL){
+		neighbour_go_first(self,empty);
+	}else{
+		empty->nextNeighbour = self;
+	}	
 }
 
 void neighbour_dump(struct Neighbour *self) {
@@ -67,11 +63,10 @@ void neighbour_dump(struct Neighbour *self) {
 
 
 void list_dump(struct Neighbour *self) {
-	struct Neighbour empty;
 	if(self->previousNeighbour != NULL){
+		struct Neighbour empty;
 		neighbour_go_first(self->previousNeighbour,&empty);
-		neighbour_dump(&empty);
-		list_dump_help(&empty);
+		list_dump_help(empty.nextNeighbour);
 	}else{
 		list_dump_help(self);
 	}
