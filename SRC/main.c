@@ -15,28 +15,55 @@
 #include "main.h"
 
 /*---------------------*/
-/* Programme principal */
+/* Main programm */
 /*---------------------*/
 
 int main() {
-	struct Neighbour first, second, empty;
+	struct Neighbour zero, first, second, third, empty;
 	neighbour_create(&first);
 	neighbour_create(&second);
+	neighbour_create(&third);
+	neighbour_create(&zero);
 	neighbour_create(&empty);
 
+
+	third.neighbour=3;
+	third.weight=3;
+	zero.neighbour=1;
+	zero.weight=1;
 	first.neighbour = 1;
 	first.weight = 4;
 	second.neighbour = 2;
 	second.weight = 3;
-	first.nextNeighbour = malloc(sizeof(struct Neighbour));
 	first.nextNeighbour = &second;
 
 
-	second.previousNeighbour = malloc(sizeof(struct Neighbour));
 	second.previousNeighbour = &first;
-	//printf("%d\n",second.previousNeighbour->neighbour);
+
 	list_dump(&second);
-	
+	printf("\n");
+
+	neighbour_destroy(&first);
+
+	list_dump(&second);
+	printf("\n");
+
+	printf("Back :");
+	neighbour_add_back(&second,&third);
+
+	list_dump(&second);
+	printf("\n");
+
+
+	printf("Front: ");
+	neighbour_add_front(&second,&zero);
+	list_dump(&second);
+	printf("\n");
+
+	neighbour_list_destroy(&second);
+	printf("Destroy :");
+	list_dump(&second);
+	printf("\n");
 
 	/*
 	printf("Possibles commands for this programm : \n");

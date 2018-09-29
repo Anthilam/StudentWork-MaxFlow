@@ -29,9 +29,19 @@ void neighbour_create(struct Neighbour *self);
 void neighbour_init(struct Neighbour *self, int value, struct Neighbour *previous, struct Neighbour *next);
 
 /*
- * Destroy a list
+ * Destroy a neighbour
  */
 void neighbour_destroy(struct Neighbour *self);
+
+/*
+ * Destroy a list
+ */
+void neighbour_list_destroy(struct Neighbour *self);
+
+/*
+ * Help to destroy a list
+ */
+void neighbour_list_destroy_help(struct Neighbour *self);
 
 /*
 * Go to first neighbour
@@ -41,12 +51,12 @@ void neighbour_go_first(struct Neighbour *self, struct Neighbour *empty);
 /*
  * Add an element in the list at the end
  */
-void neighbour_add_back(struct Neighbour *self, int value, int weight);
+void neighbour_add_back(struct Neighbour *self, struct Neighbour *back);
 
 /*
  * Add an element in the list at the beginning
  */
-void neighbour_add_front(struct Neighbour *self, int value);
+void neighbour_add_front(struct Neighbour *self, struct Neighbour *front);
 
 /*
  * Insert an element in the list (preserving the order)

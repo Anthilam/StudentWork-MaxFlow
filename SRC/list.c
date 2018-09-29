@@ -17,16 +17,15 @@ void neighbour_create(struct Neighbour *self) {
 /*
  * Add an element in the list at the end
  */
-void neighbour_add_back(struct Neighbour *self, int value, int weight){
+void neighbour_add_back(struct Neighbour *self, struct Neighbour *back){
 	if(self->nextNeighbour != NULL){
-		neighbour_add_back(self->nextNeighbour, value, weight);
+		neighbour_add_back(self->nextNeighbour, back);
 	}else{
 		self->nextNeighbour = malloc(sizeof(struct Neighbour));
-		self->nextNeighbour->previousNeighbour = malloc(sizeof(struct Neighbour));
-		self->nextNeighbour->previousNeighbour = self;   		
-		self->nextNeighbour->neighbour = value;
-		self->nextNeighbour->weight = weight;
-    		self->nextNeighbour->nextNeighbour = NULL;
+		self->nextNeighbour = back;
+		back->previousNeighbour = malloc(sizeof(struct Neighbour));
+		back->previousNeighbour = self;
+		back->nextNeighbour = NULL;
 		
 	}
 }
@@ -34,14 +33,54 @@ void neighbour_add_back(struct Neighbour *self, int value, int weight){
 
 
 /*
- * Destroy a list
+ * Add an element in the list at the beginning
+ */
+void neighbour_add_front(struct Neighbour *self, struct Neighbour *front){
+	struct Neighbour empty;
+	neighbour_go_first(self,&empty);
+	empty.nextNeighbour->previousNeighbour = malloc(sizeof(struct Neighbour));
+	empty.nextNeighbour->previousNeighbour = front;
+	front->nextNeighbour = empty.nextNeighbour;
+}
+
+
+/*
+ * Destroy a neighbour
  */
 void neighbour_destroy(struct Neighbour *self){
 	self->neighbour = 0;
 	self->weight = 0;
+	if(self->nextNeighbour != NULL){
+		self->nextNeighbour->previousNeighbour = NULL;
+	}
+	if(self->previousNeighbour != NULL){
+		self->previousNeighbour->nextNeighbour = NULL;
+	}
 	self->nextNeighbour = NULL;
 	self->previousNeighbour = NULL;
-	free(self);
+}
+
+
+/*
+* Destroy a list of neighbour
+*/
+void neighbour_list_destroy(struct Neighbour *self){
+	if(self->previousNeighbour != NULL){
+		struct Neighbour empty;
+		neighbour_go_first(self->previousNeighbour,&empty);
+		neighbour_list_destroy_help(empty.nextNeighbour);
+	}else{
+		neighbour_list_destroy_help(self);
+	}
+}
+
+void neighbour_list_destroy_help(struct Neighbour *self){
+	if(self->nextNeighbour != NULL){
+		struct Neighbour empty;
+		empty.nextNeighbour = self->nextNeighbour;
+		neighbour_destroy(self);
+		neighbour_list_destroy_help(empty.nextNeighbour);
+	}
 }
 
 /*
@@ -55,6 +94,10 @@ void neighbour_go_first(struct Neighbour *self, struct Neighbour *empty){
 	}	
 }
 
+
+/*
+* Dump a neighbour
+*/
 void neighbour_dump(struct Neighbour *self) {
 	if(self != NULL){
 		printf("(%d/%d)",self->neighbour,self->weight);
@@ -62,6 +105,9 @@ void neighbour_dump(struct Neighbour *self) {
 }
 
 
+/*
+* Dump a list
+*/
 void list_dump(struct Neighbour *self) {
 	if(self->previousNeighbour != NULL){
 		struct Neighbour empty;
@@ -81,59 +127,6 @@ void list_dump_help(struct Neighbour *self){
 }
 
 /*
-void list_node_destroy(struct list_node *self) {
-  if (self->next != NULL) {
-    list_node_destroy(self->next);
-  }
-  free(self);
-}
-
-void list_destroy(struct list *self) {
-  if (self->first != NULL) {
-    list_node_destroy(self->first);
-  }
-  self->first = NULL;
-}*/
-/*
-
-void list_node_dump(struct list_node *self) {
-  if (self != NULL) {
-    printf("%d ", self->value);
-    if (self->next != NULL) {
-      list_node_dump(self->next);
-    }
-  }
-}
-
-void list_dump(const struct list *self) {
-  printf("( ");
-  list_node_dump(self->first);
-  printf(" )\n");
-}
-
-
-void list_node_add_back(struct list_node *self, int value) {
-  if (self->next == NULL) {
-    struct list_node *l = malloc(sizeof(struct list_node));
-    l->value = value;
-    l->next = NULL;
-    self->next = l;
-  }
-  else {
-    list_node_add_back(self->next, value);
-  }
-}
-
-void list_add_back(struct list *self, int value) {
-  if (self->first == NULL) {
-    self->first = malloc(sizeof(struct list_node));
-    self->first->value = value;
-    self->first->next = NULL;
-  }
-  else {
-    list_node_add_back(self->first, value);
-  }
-}
 
 
 void list_add_front(struct list *self, int value) {
