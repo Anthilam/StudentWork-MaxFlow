@@ -19,7 +19,7 @@
 /*---------------------*/
 
 int main() {
-	struct Neighbour zero, first, second, third, empty;
+	struct Neighbour zero, first, second, third, fourth, empty;
 	neighbour_create(&first);
 	neighbour_create(&second);
 	neighbour_create(&third);
@@ -48,11 +48,26 @@ int main() {
 	list_dump(&second);
 	printf("\n");
 
+
+
 	printf("Back :");
 	neighbour_add_back(&second,&third);
 
 	list_dump(&second);
 	printf("\n");
+
+
+
+	neighbour_create(&fourth);
+	fourth.neighbour=4;
+	fourth.weight=4;
+
+	printf("Between :");
+	neighbour_insert(&fourth,&second,&third);
+
+	list_dump(&second);
+	printf("\n");
+
 
 
 	printf("Front: ");

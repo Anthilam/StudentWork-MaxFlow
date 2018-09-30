@@ -59,34 +59,15 @@ void neighbour_add_back(struct Neighbour *self, struct Neighbour *back);
 void neighbour_add_front(struct Neighbour *self, struct Neighbour *front);
 
 /*
- * Insert an element in the list (preserving the order)
+ * Insert an neighbour between two neighbour
  */
-void neighbour_insert(struct Neighbour *self, int value, size_t index);
+void neighbour_insert(struct Neighbour *self, struct Neighbour *previous, struct Neighbour *next);
 
 /*
  * Remove an element in the list (preserving the order)
  */
 void neighbour_remove(struct Neighbour *self, size_t index);
 
-/*
- * Get a pointer to the element at the specified index in the list
- */
-int *neighbour_get(const struct Neighbour *self, size_t index);
-
-/*
- * Tell if the list is empty
- */
-bool neighbour_is_empty(const struct Neighbour *self);
-
-/*
- * Get the size of the list
- */
-size_t neighbour_size(const struct Neighbour *self);
-
-/*
- * Search for an element in the list.
- */
-size_t neighbour_search(const struct Neighbour *self, int value);
 
 /*
  * Print a neighbour to stdout
