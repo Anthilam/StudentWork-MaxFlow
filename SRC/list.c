@@ -1,140 +1,157 @@
 #include "list.h"
 
-
-
 /*
- * Create an empty neighbour
+ * Create an empty node
  */
-void neighbour_create(struct Neighbour *self) {
-	self->neighbour = 0;
+void node_create(struct node *self)
+{
+	self->n = 0;
 	self->weight = 0;
-	self->nextNeighbour = NULL;
-	self->previousNeighbour = NULL;
+	self->nextnode = NULL;
+	self->previousnode = NULL;
 }
-
-
 
 /*
  * Add an element in the list at the end
  */
-void neighbour_add_back(struct Neighbour *self, struct Neighbour *back){
-	if(self->nextNeighbour != NULL){
-		neighbour_add_back(self->nextNeighbour, back);
-	}else{
-		self->nextNeighbour = malloc(sizeof(struct Neighbour));
-		self->nextNeighbour = back;
-		back->previousNeighbour = malloc(sizeof(struct Neighbour));
-		back->previousNeighbour = self;
-		back->nextNeighbour = NULL;
-		
+void node_add_back(struct node *self, struct node *back)
+{
+	if (self->nextnode != NULL)
+	{
+		node_add_back(self->nextnode, back);
+	}
+	else
+	{
+		self->nextnode = malloc(sizeof(struct node));
+		self->nextnode = back;
+		back->previousnode = malloc(sizeof(struct node));
+		back->previousnode = self;
+		back->nextnode = NULL;
 	}
 }
-
-
 
 /*
  * Add an element in the list at the beginning
  */
-void neighbour_add_front(struct Neighbour *self, struct Neighbour *front){
-	struct Neighbour empty;
-	neighbour_go_first(self,&empty);
-	empty.nextNeighbour->previousNeighbour = malloc(sizeof(struct Neighbour));
-	empty.nextNeighbour->previousNeighbour = front;
-	front->nextNeighbour = empty.nextNeighbour;
+void node_add_front(struct node *self, struct node *front)
+{
+	struct node empty;
+	node_go_first(self,&empty);
+	empty.nextnode->previousnode = malloc(sizeof(struct node));
+	empty.nextnode->previousnode = front;
+	front->nextnode = empty.nextnode;
 }
 
-
 /*
- * Insert an neighbour between two neighbour
+ * Insert an node between two node
  */
-void neighbour_insert(struct Neighbour *self, struct Neighbour *previous, struct Neighbour *next){
-	self->previousNeighbour = previous;
-	previous->nextNeighbour = self;
-	self->nextNeighbour = next;
-	next->previousNeighbour = self;
+void node_insert(struct node *self, struct node *previous, struct node *next)
+{
+	self->previousnode = previous;
+	previous->nextnode = self;
+	self->nextnode = next;
+	next->previousnode = self;
 }
 
-
-
 /*
- * Destroy a neighbour
+ * Destroy a node
  */
-void neighbour_destroy(struct Neighbour *self){
-	self->neighbour = 0;
+void node_destroy(struct node *self)
+{
+	self->n = 0;
 	self->weight = 0;
-	if(self->nextNeighbour != NULL){
-		self->nextNeighbour->previousNeighbour = NULL;
-	}
-	if(self->previousNeighbour != NULL){
-		self->previousNeighbour->nextNeighbour = NULL;
-	}
-	self->nextNeighbour = NULL;
-	self->previousNeighbour = NULL;
-}
 
-
-/*
-* Destroy a list of neighbour
-*/
-void neighbour_list_destroy(struct Neighbour *self){
-	if(self->previousNeighbour != NULL){
-		struct Neighbour empty;
-		neighbour_go_first(self->previousNeighbour,&empty);
-		neighbour_list_destroy_help(empty.nextNeighbour);
-	}else{
-		neighbour_list_destroy_help(self);
+	if (self->nextnode != NULL)
+	{
+		self->nextnode->previousnode = NULL;
 	}
-}
 
-void neighbour_list_destroy_help(struct Neighbour *self){
-	if(self->nextNeighbour != NULL){
-		struct Neighbour empty;
-		empty.nextNeighbour = self->nextNeighbour;
-		neighbour_destroy(self);
-		neighbour_list_destroy_help(empty.nextNeighbour);
+	if (self->previousnode != NULL)
+	{
+		self->previousnode->nextnode = NULL;
 	}
+
+	self->nextnode = NULL;
+	self->previousnode = NULL;
 }
 
 /*
-* Go to the first neighbour from a neighbour
+* Destroy a list of node
 */
-void neighbour_go_first(struct Neighbour *self, struct Neighbour *empty){
-	if(self->previousNeighbour!=NULL){
-		neighbour_go_first(self,empty);
-	}else{
-		empty->nextNeighbour = self;
-	}	
-}
-
-
-/*
-* Dump a neighbour
-*/
-void neighbour_dump(struct Neighbour *self) {
-	if(self != NULL){
-		printf("(%d/%d)",self->neighbour,self->weight);
+void node_list_destroy(struct node *self)
+{
+	if (self->previousnode != NULL)
+	{
+		struct node empty;
+		node_go_first(self->previousnode, &empty);
+		node_list_destroy_help(empty.nextnode);
+	}
+	else
+	{
+		node_list_destroy_help(self);
 	}
 }
 
+void node_list_destroy_help(struct node *self)
+{
+	if (self->nextnode != NULL)
+	{
+		struct node empty;
+		empty.nextnode = self->nextnode;
+		node_destroy(self);
+		node_list_destroy_help(empty.nextnode);
+	}
+}
+
+/*
+* Go to the first node from a node
+*/
+void node_go_first(struct node *self, struct node *empty)
+{
+	if (self->previousnode!=NULL)
+	{
+		node_go_first(self, empty);
+	}
+	else
+	{
+		empty->nextnode = self;
+	}
+}
+
+/*
+* Dump a node
+*/
+void node_dump(struct node *self)
+{
+	if (self != NULL)
+	{
+		printf("(%d/%d)", self->n, self->weight);
+	}
+}
 
 /*
 * Dump a list
 */
-void list_dump(struct Neighbour *self) {
-	if(self->previousNeighbour != NULL){
-		struct Neighbour empty;
-		neighbour_go_first(self->previousNeighbour,&empty);
-		list_dump_help(empty.nextNeighbour);
-	}else{
+void list_dump(struct node *self)
+{
+	if (self->previousnode != NULL)
+	{
+		struct node empty;
+		node_go_first(self->previousnode, &empty);
+		list_dump_help(empty.nextnode);
+	}
+	else
+	{
 		list_dump_help(self);
 	}
 }
 
-void list_dump_help(struct Neighbour *self){
-	neighbour_dump(self);
-	if(self->nextNeighbour != NULL){
+void list_dump_help(struct node *self)
+{
+	node_dump(self);
+	if (self->nextnode != NULL)
+	{
 		printf(", ");
-		list_dump_help(self->nextNeighbour);
+		list_dump_help(self->nextnode);
 	}
 }
-

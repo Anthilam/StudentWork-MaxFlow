@@ -3,7 +3,7 @@
  * Programme : main.c
  *
  * auteur :    Timothée Guy, Reynald Barbeaut
- * 
+ *
  * resume :    Some algorithm about graph
  *
  * date :      21/02/05
@@ -19,31 +19,31 @@
 /*---------------------*/
 
 int main() {
-	struct Neighbour zero, first, second, third, fourth, empty;
-	neighbour_create(&first);
-	neighbour_create(&second);
-	neighbour_create(&third);
-	neighbour_create(&zero);
-	neighbour_create(&empty);
+	struct node zero, first, second, third, fourth, empty;
+	node_create(&first);
+	node_create(&second);
+	node_create(&third);
+	node_create(&zero);
+	node_create(&empty);
 
 
-	third.neighbour=3;
+	third.node=3;
 	third.weight=3;
-	zero.neighbour=1;
+	zero.node=1;
 	zero.weight=1;
-	first.neighbour = 1;
+	first.node = 1;
 	first.weight = 4;
-	second.neighbour = 2;
+	second.node = 2;
 	second.weight = 3;
-	first.nextNeighbour = &second;
+	first.nextnode = &second;
 
 
-	second.previousNeighbour = &first;
+	second.previousnode = &first;
 
 	list_dump(&second);
 	printf("\n");
 
-	neighbour_destroy(&first);
+	node_destroy(&first);
 
 	list_dump(&second);
 	printf("\n");
@@ -51,19 +51,19 @@ int main() {
 
 
 	printf("Back :");
-	neighbour_add_back(&second,&third);
+	node_add_back(&second,&third);
 
 	list_dump(&second);
 	printf("\n");
 
 
 
-	neighbour_create(&fourth);
-	fourth.neighbour=4;
+	node_create(&fourth);
+	fourth.node=4;
 	fourth.weight=4;
 
 	printf("Between :");
-	neighbour_insert(&fourth,&second,&third);
+	node_insert(&fourth,&second,&third);
 
 	list_dump(&second);
 	printf("\n");
@@ -71,11 +71,11 @@ int main() {
 
 
 	printf("Front: ");
-	neighbour_add_front(&second,&zero);
+	node_add_front(&second,&zero);
 	list_dump(&second);
 	printf("\n");
 
-	neighbour_list_destroy(&second);
+	node_list_destroy(&second);
 	printf("Destroy :");
 	list_dump(&second);
 	printf("\n");
@@ -95,4 +95,3 @@ int main() {
 
 
 }
-    
