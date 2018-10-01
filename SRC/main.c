@@ -19,31 +19,31 @@
 /*---------------------*/
 
 int main() {
-	struct node zero, first, second, third, fourth, empty;
-	node_create(&first);
-	node_create(&second);
-	node_create(&third);
-	node_create(&zero);
-	node_create(&empty);
+	struct Neighbour zero, first, second, third, fourth, empty;
+	neighbour_create(&first);
+	neighbour_create(&second);
+	neighbour_create(&third);
+	neighbour_create(&zero);
+	neighbour_create(&empty);
 
 
-	third.node=3;
+	third.neighbour=3;
 	third.weight=3;
-	zero.node=1;
+	zero.neighbour=1;
 	zero.weight=1;
-	first.node = 1;
+	first.neighbour = 1;
 	first.weight = 4;
-	second.node = 2;
+	second.neighbour = 2;
 	second.weight = 3;
-	first.nextnode = &second;
+	first.nextneighbour = &second;
 
 
-	second.previousnode = &first;
+	second.previousneighbour = &first;
 
 	list_dump(&second);
 	printf("\n");
 
-	node_destroy(&first);
+	neighbour_destroy(&first);
 
 	list_dump(&second);
 	printf("\n");
@@ -51,19 +51,19 @@ int main() {
 
 
 	printf("Back :");
-	node_add_back(&second,&third);
+	neighbour_add_back(&second,&third);
 
 	list_dump(&second);
 	printf("\n");
 
 
 
-	node_create(&fourth);
-	fourth.node=4;
+	neighbour_create(&fourth);
+	fourth.neighbour=4;
 	fourth.weight=4;
 
 	printf("Between :");
-	node_insert(&fourth,&second,&third);
+	neighbour_insert(&fourth,&second,&third);
 
 	list_dump(&second);
 	printf("\n");
@@ -71,11 +71,11 @@ int main() {
 
 
 	printf("Front: ");
-	node_add_front(&second,&zero);
+	neighbour_add_front(&second,&zero);
 	list_dump(&second);
 	printf("\n");
 
-	node_list_destroy(&second);
+	neighbour_list_destroy(&second);
 	printf("Destroy :");
 	list_dump(&second);
 	printf("\n");
@@ -84,9 +84,9 @@ int main() {
 	printf("Possibles commands for this programm : \n");
 	printf("\t create graph : graph creation\n");
 	printf("\t load graph : graph loading from a text file\n");
-	printf("\t add node : insertion of a node in the graph\n");
+	printf("\t add neighbour : insertion of a neighbour in the graph\n");
 	printf("\t add edge : insertion of an edge in the graph\n");
-	printf("\t remove node : deletion of a node from the graph\n");
+	printf("\t remove neighbour : deletion of a neighbour from the graph\n");
 	printf("\t remove edge : deletion of an edge from the graph\n");
 	printf("\t view graph : graph display\n");
    	printf("\t save graph : graph saving in the text format\n");

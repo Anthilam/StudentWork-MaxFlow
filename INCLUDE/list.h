@@ -1,5 +1,5 @@
-#ifndef node_H
-#define node_H
+#ifndef neighbour_H
+#define neighbour_H
 
 #include <stddef.h>
 #include <assert.h>
@@ -8,77 +8,77 @@
 #include <stdbool.h>
 #include <string.h>
 
-// Structure representing a node in a graph
-struct node {
-	int n;
+// Structure representing a neighbour in a graph
+struct Neighbour {
+	int neighbour;
 	int weight;
-	struct node *nextnode;
-	struct node *previousnode;
+	struct Neighbour *nextneighbour;
+	struct Neighbour *previousneighbour;
 };
 
 /*
- * Create an empty node
+ * Create an empty neighbour
  */
-void node_create(struct node *self);
+void neighbour_create(struct Neighbour *self);
 
 /*
- * Init a node
+ * Init a neighbour
  */
-void node_init(struct node *self, int value, struct node *previous, struct node *next);
+void neighbour_init(struct Neighbour *self, int value, struct Neighbour *previous, struct Neighbour *next);
 
 /*
- * Destroy a node
+ * Destroy a neighbour
  */
-void node_destroy(struct node *self);
+void neighbour_destroy(struct Neighbour *self);
 
 /*
  * Destroy a list
  */
-void node_list_destroy(struct node *self);
+void neighbour_list_destroy(struct Neighbour *self);
 
 /*
  * Help to destroy a list
  */
-void node_list_destroy_help(struct node *self);
+void neighbour_list_destroy_help(struct Neighbour *self);
 
 /*
-* Go to first node
+* Go to first neighbour
 */
-void node_go_first(struct node *self, struct node *empty);
+void neighbour_go_first(struct Neighbour *self, struct Neighbour *empty);
 
 /*
  * Add an element in the list at the end
  */
-void node_add_back(struct node *self, struct node *back);
+void neighbour_add_back(struct Neighbour *self, struct Neighbour *back);
 
 /*
  * Add an element in the list at the beginning
  */
-void node_add_front(struct node *self, struct node *front);
+void neighbour_add_front(struct Neighbour *self, struct Neighbour *front);
 
 /*
- * Insert an node between two node
+ * Insert an neighbour between two neighbour
  */
-void node_insert(struct node *self, struct node *previous, struct node *next);
+void neighbour_insert(struct Neighbour *self, struct Neighbour *previous, struct Neighbour *next);
 
 /*
  * Remove an element in the list (preserving the order)
  */
-void node_remove(struct node *self, size_t index);
+void neighbour_remove(struct Neighbour *self, size_t index);
 
 /*
- * Print a node to stdout
+ * Print a neighbour to stdout
  */
-void node_dump(struct node *self);
+void neighbour_dump(struct Neighbour *self);
 
 /*
  * Print a list
  */
-void list_dump(struct node *self);
+void list_dump(struct Neighbour *self);
 
 /*
  * Help to print a list
  */
-void list_dump_help(struct node *self);
+void list_dump_help(struct Neighbour *self);
 
 #endif // LIST_H
