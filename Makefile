@@ -1,8 +1,8 @@
+# Makefile --- Contruction de la liste des sources et objets ---
 
-# Makefile 5 --- Contruction de la liste des sources et objets ---
-
-# Variables propres a cette applie
+# Variables propres a cette application
 MAIN = main
+BIN = ./BIN/
 INCLUDE = ./INCLUDE/
 SRC = ./SRC/
 OBJ = ./OBJ/
@@ -13,22 +13,21 @@ CFLAGS = -O4 -W -Wall
 CPPFLAGS = -I$(INCLUDE)
 LDLIBS = -lm
 
-
-# cible principale
-all : $(MAIN)
+# Cible principale
+all : $(BIN)main
 
 # Regle principale avec l'edition de lien
-main : $(OBJ)main.o $(OBJ)list.o
-	$(CC) $(CPPFLAGS) $(CFLAGS) -o 	$@ $^ $(LDLIBS) 
+$(BIN)main: $(OBJ)main.o $(OBJ)list.o
+	$(CC) $(CPPFLAGS) $(CFLAGS) -o 	$@ $^ $(LDLIBS)
 
 # Regle de construction des .o
 $(OBJ)%.o : $(SRC)%.c $(INCLUDE)%.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # Nettoyage des fichiers intermediaires
-clean : 
-	rm $(OBJ); rm *~
+clean :
+	rm -f $(OBJ)*
 
-# suppression de tous les fichiers issus de la compilation
+# Suppression de tous les fichiers issus de la compilation
 veryclean : clean
-	rm $(MAIN)
+	rm -f $(BIN)*
