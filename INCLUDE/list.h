@@ -12,14 +12,14 @@
 struct Neighbour {
 	int neighbour;
 	int weight;
-	struct Neighbour *nextneighbour;
-	struct Neighbour *previousneighbour;
+	struct Neighbour *nextNeighbour;
+	struct Neighbour *previousNeighbour;
 };
 
 /*
  * Create an empty neighbour
  */
-void neighbour_create(struct Neighbour *self);
+void neighbour_create(struct Neighbour *self, int neighbour, int weight);
 
 /*
  * Init a neighbour
@@ -37,29 +37,9 @@ void neighbour_destroy(struct Neighbour *self);
 void neighbour_list_destroy(struct Neighbour *self);
 
 /*
- * Help to destroy a list
- */
-void neighbour_list_destroy_help(struct Neighbour *self);
-
-/*
-* Go to first neighbour
-*/
-void neighbour_go_first(struct Neighbour *self, struct Neighbour *empty);
-
-/*
- * Add an element in the list at the end
- */
-void neighbour_add_back(struct Neighbour *self, struct Neighbour *back);
-
-/*
  * Add an element in the list at the beginning
  */
 void neighbour_add_front(struct Neighbour *self, struct Neighbour *front);
-
-/*
- * Insert an neighbour between two neighbour
- */
-void neighbour_insert(struct Neighbour *self, struct Neighbour *previous, struct Neighbour *next);
 
 /*
  * Remove an element in the list (preserving the order)
@@ -75,10 +55,5 @@ void neighbour_dump(struct Neighbour *self);
  * Print a list
  */
 void list_dump(struct Neighbour *self);
-
-/*
- * Help to print a list
- */
-void list_dump_help(struct Neighbour *self);
 
 #endif // LIST_H

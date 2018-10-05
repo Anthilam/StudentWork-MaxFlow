@@ -19,28 +19,20 @@
 /*---------------------*/
 
 int main() {
-	struct Neighbour zero, first, second, third, fourth, empty;
-	neighbour_create(&first);
-	neighbour_create(&second);
-	neighbour_create(&third);
-	neighbour_create(&zero);
-	neighbour_create(&empty);
+	struct Neighbour zero, first, second, third, empty;
+	neighbour_create(&first,1,1);
+	neighbour_create(&second,2,2);
+	neighbour_create(&third,3,3);
+	neighbour_create(&zero,-1,0);
+	neighbour_create(&empty,0,0);
+	printf("Beginning of the programm :\n");
 
+	printf("Front: ");
+	neighbour_add_front(&zero,&third);
+	neighbour_add_front(&third,&second);
+	neighbour_add_front(&second,&first);
 
-	third.neighbour=3;
-	third.weight=3;
-	zero.neighbour=1;
-	zero.weight=1;
-	first.neighbour = 1;
-	first.weight = 4;
-	second.neighbour = 2;
-	second.weight = 3;
-	first.nextneighbour = &second;
-
-
-	second.previousneighbour = &first;
-
-	list_dump(&second);
+	list_dump(&first);
 	printf("\n");
 
 	neighbour_destroy(&first);
@@ -48,32 +40,6 @@ int main() {
 	list_dump(&second);
 	printf("\n");
 
-
-
-	printf("Back :");
-	neighbour_add_back(&second,&third);
-
-	list_dump(&second);
-	printf("\n");
-
-
-
-	neighbour_create(&fourth);
-	fourth.neighbour=4;
-	fourth.weight=4;
-
-	printf("Between :");
-	neighbour_insert(&fourth,&second,&third);
-
-	list_dump(&second);
-	printf("\n");
-
-
-
-	printf("Front: ");
-	neighbour_add_front(&second,&zero);
-	list_dump(&second);
-	printf("\n");
 
 	neighbour_list_destroy(&second);
 	printf("Destroy :");
