@@ -28,9 +28,6 @@ void neighbour_add_front(struct Neighbour *self, struct Neighbour *front)
  */
 void neighbour_destroy(struct Neighbour *self)
 {
-	self->neighbour = 0;
-	self->weight = 0;
-
 	if (self->nextNeighbour != NULL)
 	{
 		self->nextNeighbour->previousNeighbour = NULL;
@@ -60,7 +57,6 @@ void neighbour_list_destroy(struct Neighbour *self)
 	}
 }
 
-
 /*
 * Dump a neighbour
 */
@@ -77,10 +73,13 @@ void neighbour_dump(struct Neighbour *self)
 */
 void list_dump(struct Neighbour *self)
 {
-	neighbour_dump(self);
-	if (self->nextNeighbour != NULL)
+	if (self != NULL)
 	{
-		printf(", ");
-		list_dump(self->nextNeighbour);
+		neighbour_dump(self);
+		if (self->nextNeighbour != NULL)
+		{
+			printf(", ");
+			list_dump(self->nextNeighbour);
+		}
 	}
 }

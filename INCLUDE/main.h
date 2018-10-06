@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "list.h"
-
+#include "graph.h"
 
 void clean_stdin(void){
 	int c = 0;

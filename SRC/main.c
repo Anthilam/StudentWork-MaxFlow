@@ -14,15 +14,30 @@
 
 #include "main.h"
 
+/* Main for test */
+int main()
+{
+	struct Graph g;
 
+	create_graph(&g, 10);
+
+	add_node(&g, 0);
+	add_node(&g, 1);
+	add_node(&g, 25);
+	add_node(&g, 5);
+	add_node(&g, 1);
+
+	view_graph(&g);
+
+	destroy_graph(&g);
+}
 
 
 /*---------------------*/
 /* Main programm */
 /*---------------------*/
 
-int main() {
-
+/*int main() {
 	char *string = malloc(sizeof(char *));
 	int res = 0, cmp = 1;
 	char help[512];
@@ -40,9 +55,9 @@ int main() {
 
 
 	printf("%s",help);
-	
+
 	while(cmp != 0){
-		res = scanf("%[^\n]",string);
+		res = scanf("%s[^\n]",string);
 		clean_stdin();
 		if(res == 0)
 		{
@@ -77,9 +92,8 @@ int main() {
 				printf("%s",help);
 			}else{
 				printf("Error unknown command !\n");
-				printf("%s",help);		
-			}	
-		}	
-
+				printf("%s",help);
+			}
+		}
 	}
-}
+}*/

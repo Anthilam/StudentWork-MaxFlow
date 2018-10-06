@@ -1,5 +1,5 @@
-#ifndef neighbour_H
-#define neighbour_H
+#ifndef LIST_H
+#define LIST_H
 
 #include <stddef.h>
 #include <assert.h>
@@ -20,11 +20,6 @@ struct Neighbour {
  * Create an empty neighbour
  */
 void neighbour_create(struct Neighbour *self, int neighbour, int weight);
-
-/*
- * Init a neighbour
- */
-void neighbour_init(struct Neighbour *self, int value, struct Neighbour *previous, struct Neighbour *next);
 
 /*
  * Destroy a neighbour

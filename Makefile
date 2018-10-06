@@ -17,7 +17,7 @@ LDLIBS = -lm
 all : $(BIN)main
 
 # Regle principale avec l'edition de lien
-$(BIN)main: $(OBJ)main.o $(OBJ)list.o
+$(BIN)main: $(OBJ)main.o $(OBJ)list.o $(OBJ)graph.o
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o 	$@ $^ $(LDLIBS)
 
 # Regle de construction des .o
