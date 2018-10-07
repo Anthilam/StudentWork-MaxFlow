@@ -9,46 +9,41 @@
 #include <string.h>
 
 // Structure representing a neighbour in a graph
-struct Neighbour {
+typedef struct Neighbour {
 	int neighbour;
 	int weight;
 	struct Neighbour *nextNeighbour;
-	struct Neighbour *previousNeighbour;
-};
+	//struct Neighbour *previousNeighbour;
+} Neighbour;
 
 /*
  * Create an empty neighbour
  */
-void neighbour_create(struct Neighbour *self, int neighbour, int weight);
-
-/*
- * Destroy a neighbour
- */
-void neighbour_destroy(struct Neighbour *self);
+void neighbour_create(Neighbour *self, int neighbour, int weight);
 
 /*
  * Destroy a list
  */
-void neighbour_list_destroy(struct Neighbour *self);
+void neighbour_list_destroy(Neighbour *self);
 
 /*
  * Add an element in the list at the beginning
  */
-void neighbour_add_front(struct Neighbour *self, struct Neighbour *front);
+void neighbour_add_front(Neighbour *self, Neighbour *front);
 
 /*
  * Remove an element in the list (preserving the order)
  */
-void neighbour_remove(struct Neighbour *self, size_t index);
+void neighbour_remove(Neighbour *self, size_t index);
 
 /*
  * Print a neighbour to stdout
  */
-void neighbour_dump(struct Neighbour *self);
+void neighbour_dump(Neighbour *self);
 
 /*
  * Print a list
  */
-void list_dump(struct Neighbour *self);
+void list_dump(Neighbour *self);
 
 #endif // LIST_H

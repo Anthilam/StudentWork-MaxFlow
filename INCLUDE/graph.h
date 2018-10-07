@@ -10,61 +10,61 @@
 
 #include "list.h"
 
+// Adjacency list structure
+typedef struct Adj {
+  Neighbour *list;
+} Adj;
+
 // Graph structure
-struct Graph {
+typedef struct Graph {
   bool isDirected;
   int nbMaxNodes;
-  struct Adj *adjList;
-};
-
-// Adjacency list structure
-struct Adj {
-  struct Neighbour *list;
-};
+  Adj *adjList;
+} Graph;
 
 /*
  * Create a graph
  */
-void create_graph(struct Graph *g, int nbNodes);
-
-/*
- * Load a graph
- */
-void load_graph(char *path);
-
-/*
- * Add a node to a graph
- */
-void add_node(struct Graph *g, int nbNode);
-
-/*
- * Add an edge to a graph
- */
-void add_edge(struct Graph *g, int nodeStart, int nodeEnd, bool symmetric);
-
-/*
- * Remove a node of a graph
- */
-void remove_node(struct Graph *g, int node);
-
-/*
- * Destroy an edge of a graph
- */
-void remove_edge(struct Graph *g, int nodeStart, int nodeEnd);
-
-/*
- * View the graph in the terminal
- */
-void view_graph(struct Graph *g);
-
-/*
- * Save the graph in a text format
- */
-void save_graph(struct Graph *g);
+void create_graph(Graph *g, int nbNodes);
 
 /*
  * Destroy a graph
  */
-void destroy_graph(struct Graph *g);
+void destroy_graph(Graph *g);
+
+/*
+ * Add a node to a graph
+ */
+void add_node(Graph *g, int nbNode);
+
+/*
+ * Remove a node of a graph
+ */
+void remove_node(Graph *g, int node);
+
+/*
+ * Add an edge to a graph
+ */
+void add_edge(Graph *g, int nodeStart, int nodeEnd, bool symmetric, int weight);
+
+/*
+ * Destroy an edge of a graph
+ */
+void remove_edge(Graph *g, int nodeStart, int nodeEnd);
+
+/*
+ * Save the graph in a text format
+ */
+void save_graph(Graph *g, char *path);
+
+/*
+ * Load a graph
+ */
+void load_graph(Graph *g, char *path);
+
+/*
+ * View the graph in the terminal
+ */
+void view_graph(Graph *g);
 
 #endif // GRAPH_H

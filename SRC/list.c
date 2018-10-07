@@ -3,75 +3,87 @@
 /*
  * Create an empty neighbour
  */
-void neighbour_create(struct Neighbour *self, int neighbour, int weight)
+void neighbour_create(Neighbour *self, int neighbour, int weight)
 {
 	self->neighbour = neighbour;
 	self->weight = weight;
-	self->previousNeighbour = NULL;
 	self->nextNeighbour = NULL;
 }
-
 
 /*
  * Add an element in the list at the beginning
  */
-void neighbour_add_front(struct Neighbour *self, struct Neighbour *front)
+void neighbour_add_front(Neighbour *self, Neighbour *front)
 {
-	self->previousNeighbour = malloc(sizeof(struct Neighbour));
-	self->previousNeighbour = front;
-	front->nextNeighbour = self;
-}
+	Neighbour temp; // Temporary neighbour
 
-
-/*
- * Destroy a neighbour
- */
-void neighbour_destroy(struct Neighbour *self)
-{
-	if (self->nextNeighbour != NULL)
+	// Save self into temp
+	if (memcpy(&temp, self, sizeof(Neighbour)) == NULL)
 	{
-		self->nextNeighbour->previousNeighbour = NULL;
+		printf("ERROR:\tmemcpy() failed, stopping..");
+		exit(1);
+	}
+	
+	// Overwrite self with front
+	if (memcpy(self, front, sizeof(Neighbour)) == NULL)
+	{
+		printf("ERROR:\tmemcpy() failed, stopping..");
+		exit(1);
 	}
 
-	if (self->previousNeighbour != NULL)
+	self->nextNeighbour = malloc(sizeof(Neighbour));
+	if (self->nextNeighbour == NULL)
 	{
-		self->previousNeighbour->nextNeighbour = NULL;
+		printf("ERROR:\tmalloc() failed, stopping..");
+		exit(1);
 	}
 
-	self->nextNeighbour = NULL;
-	self->previousNeighbour = NULL;
-	self = NULL;
+	// Copy temp (first self) to the nextNeighbour of the new self
+	if (memcpy(self->nextNeighbour, &temp, sizeof(Neighbour)) == NULL)
+	{
+		printf("ERROR:\tmemcpy() failed, stopping..");
+		exit(1);
+	}
 }
 
 /*
 * Destroy a list of neighbour
 */
-void neighbour_list_destroy(struct Neighbour *self)
+void neighbour_list_destroy(Neighbour *self)
 {
-	if (self->nextNeighbour != NULL)
+	if (self != NULL)
 	{
-		struct Neighbour empty;
-		empty.nextNeighbour = self->nextNeighbour;
-		neighbour_destroy(self);
-		neighbour_list_destroy(empty.nextNeighbour);
+		if (self->nextNeighbour != NULL)
+		{
+			neighbour_list_destroy(self->nextNeighbour);
+		}
+		free(self);
 	}
 }
 
 /*
 * Dump a neighbour
 */
-void neighbour_dump(struct Neighbour *self)
+void neighbour_dump(Neighbour *self)
 {
 	if (self != NULL)
 	{
-		printf("(%d/%d)", self->neighbour, self->weight);
+		if (self->neighbour >= 0)
+		{
+			printf("(%d/%d)", self->neighbour+1, self->weight);
+		}
+		// If it's a negative neighbour
+		else
+		{
+			printf("(%d/%d)", self->neighbour, self->weight);
+		}
 	}
 }
 
 /*
 * Dump a list
 */
-void list_dump(struct Neighbour *self)
+void list_dump(Neighbour *self)
 {
 	if (self != NULL)
 	{

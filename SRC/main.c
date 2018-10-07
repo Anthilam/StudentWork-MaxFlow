@@ -17,7 +17,7 @@
 /* Main for test */
 int main()
 {
-	struct Graph g;
+	Graph g;
 
 	create_graph(&g, 10);
 
@@ -26,6 +26,14 @@ int main()
 	add_node(&g, 25);
 	add_node(&g, 5);
 	add_node(&g, 1);
+	add_node(&g, 2);
+	add_node(&g, 10);
+
+	add_edge(&g, -1, 1, false, 2);
+	add_edge(&g, 1, 9959, false, 9);
+	add_edge(&g, 5, 1, false, 69);
+	add_edge(&g, 1, 2, true, 100);
+	add_edge(&g, 1, 10, false, 25);
 
 	view_graph(&g);
 
