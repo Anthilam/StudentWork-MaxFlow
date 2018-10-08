@@ -23,7 +23,7 @@ void neighbour_add_front(Neighbour *self, Neighbour *front)
 		printf("ERROR:\tmemcpy() failed, stopping..");
 		exit(1);
 	}
-	
+
 	// Overwrite self with front
 	if (memcpy(self, front, sizeof(Neighbour)) == NULL)
 	{
@@ -47,8 +47,8 @@ void neighbour_add_front(Neighbour *self, Neighbour *front)
 }
 
 /*
-* Destroy a list of neighbour
-*/
+ * Destroy a list of neighbour
+ */
 void neighbour_list_destroy(Neighbour *self)
 {
 	if (self != NULL)
@@ -62,8 +62,30 @@ void neighbour_list_destroy(Neighbour *self)
 }
 
 /*
-* Dump a neighbour
-*/
+ * Remove an element in the list (preserving the order)
+ */
+void neighbour_remove(Neighbour *self, int nbNode)
+{
+	if (self->neighbour >= 0)
+	{
+		Neighbour *next = self->nextNeighbour;
+
+		if (self->neighbour == nbNode)
+		{
+			self->nextNeighbour = next->nextNeighbour;
+			self->neighbour = next->neighbour;
+			self->weight = next->weight;
+			free(next);
+		}
+		else {
+			neighbour_remove(next, nbNode);
+		}
+	}
+}
+
+/*
+ * Dump a neighbour
+ */
 void neighbour_dump(Neighbour *self)
 {
 	if (self != NULL)
@@ -81,8 +103,8 @@ void neighbour_dump(Neighbour *self)
 }
 
 /*
-* Dump a list
-*/
+ * Dump a list
+ */
 void list_dump(Neighbour *self)
 {
 	if (self != NULL)

@@ -28,12 +28,27 @@ int main()
 	add_node(&g, 1);
 	add_node(&g, 2);
 	add_node(&g, 10);
+	add_node(&g, 3);
 
 	add_edge(&g, -1, 1, false, 2);
 	add_edge(&g, 1, 9959, false, 9);
 	add_edge(&g, 5, 1, false, 69);
 	add_edge(&g, 1, 2, true, 100);
 	add_edge(&g, 1, 10, false, 25);
+	add_edge(&g, 2, 10, true, 50);
+	add_edge(&g, 3, 2, true, 6565);
+
+	view_graph(&g);
+
+	remove_node(&g, -1);
+	remove_node(&g, 65);
+	remove_node(&g, 1);
+	remove_node(&g, 1);
+
+	view_graph(&g);
+
+	remove_node(&g, 10);
+	remove_node(&g, 5);
 
 	view_graph(&g);
 

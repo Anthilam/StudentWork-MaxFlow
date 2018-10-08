@@ -34,7 +34,7 @@ void neighbour_add_front(Neighbour *self, Neighbour *front);
 /*
  * Remove an element in the list (preserving the order)
  */
-void neighbour_remove(Neighbour *self, size_t index);
+void neighbour_remove(Neighbour *self, int nbNode);
 
 /*
  * Print a neighbour to stdout

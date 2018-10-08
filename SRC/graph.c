@@ -92,8 +92,34 @@ void add_node(Graph *g, int nbNode)
  */
 void remove_node(Graph *g, int node)
 {
-  // TODO
-  printf("WIP!");
+  printf("INFO:\tRemoving node %d..\n", node);
+  int realNbNode = node - 1;
+
+  // Check the node number
+  if (node <= 0 || node > g->nbMaxNodes)
+  {
+    printf("ERROR:\tNode %d not deleted, %d is out of range\n\tMin. node = 1, Max. node = %d\n", node, node, g->nbMaxNodes);
+  }
+  else if (g->adjList[realNbNode].list != NULL)
+  {
+    for (int i = 0; i < g->nbMaxNodes; ++i)
+    {
+      if (g->adjList[i].list != NULL && i != realNbNode)
+      {
+        printf("\tRemoving node from list %d\n", i);
+        neighbour_remove(g->adjList[i].list, realNbNode);
+      }
+    }
+
+    printf("\tDestroying node %d\n", node);
+    neighbour_list_destroy(g->adjList[realNbNode].list);
+    g->adjList[realNbNode].list = NULL;
+
+    printf("\tNode %d removed!\n", node);
+  }
+  else {
+    printf("ERROR:\tNode %d doesn't exists\n", node);
+  }
 }
 
 /*
