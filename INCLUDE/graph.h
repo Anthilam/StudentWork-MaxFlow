@@ -65,6 +65,6 @@ void load_graph(Graph *g, char *path);
 /*
  * View the graph in the terminal
  */
-void view_graph(Graph *g);
+void view_graph(Graph *g, FILE *out);
 
 #endif // GRAPH_H

@@ -38,19 +38,19 @@ int main()
 	add_edge(&g, 2, 10, true, 50);
 	add_edge(&g, 3, 2, true, 6565);
 
-	view_graph(&g);
+	view_graph(&g,stdout);
 
 	remove_node(&g, -1);
 	remove_node(&g, 65);
 	remove_node(&g, 1);
 	remove_node(&g, 1);
 
-	view_graph(&g);
+	view_graph(&g,stdout);
 
 	remove_node(&g, 10);
 	remove_node(&g, 5);
 
-	view_graph(&g);
+	view_graph(&g,stdout);
 
 	destroy_graph(&g);
 }

@@ -39,11 +39,11 @@ void neighbour_remove(Neighbour *self, int nbNode);
 /*
  * Print a neighbour to stdout
  */
-void neighbour_dump(Neighbour *self);
+void neighbour_dump(Neighbour *self, FILE *out);
 
 /*
  * Print a list
  */
-void list_dump(Neighbour *self);
+void list_dump(Neighbour *self, FILE *out);
 
 #endif // LIST_H

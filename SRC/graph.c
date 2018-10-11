@@ -214,16 +214,16 @@ void load_graph(Graph *g, char *path)
 /*
  * View the graph in the terminal
  */
-void view_graph(Graph *g)
+void view_graph(Graph *g, FILE *out)
 {
-  printf("\n----- VIEW GRAPH -----\n- directed: %s\n- nbMaxNodes: %d\n", g->isDirected ? "true" : "false", g->nbMaxNodes);
+  printf("\n----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "true" : "false");
 
-  printf("- Graph structure:\n");
+  printf("# node: neighbours\n");
   for (int i = 0; i < g->nbMaxNodes; ++i)
   {
-    printf("\tNode %d: ", i+1);
-    list_dump(g->adjList[i].list);
-    printf("\n");
+    fprintf(out, "%d: ", i+1);
+    list_dump(g->adjList[i].list,out);
+    fprintf(out, "\n");
   }
-  printf("\n");
+  fprintf(out, "----------------------\n");
 }

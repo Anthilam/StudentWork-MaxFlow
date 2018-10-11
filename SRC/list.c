@@ -86,18 +86,18 @@ void neighbour_remove(Neighbour *self, int nbNode)
 /*
  * Dump a neighbour
  */
-void neighbour_dump(Neighbour *self)
+void neighbour_dump(Neighbour *self, FILE *out)
 {
 	if (self != NULL)
 	{
 		if (self->neighbour >= 0)
 		{
-			printf("(%d/%d)", self->neighbour+1, self->weight);
+			fprintf(out, "(%d/%d)", self->neighbour+1, self->weight);
 		}
 		// If it's a negative neighbour
 		else
 		{
-			printf("(%d/%d)", self->neighbour, self->weight);
+			fprintf(out, "(%d/%d)", self->neighbour, self->weight);
 		}
 	}
 }
@@ -105,15 +105,15 @@ void neighbour_dump(Neighbour *self)
 /*
  * Dump a list
  */
-void list_dump(Neighbour *self)
+void list_dump(Neighbour *self, FILE *out)
 {
 	if (self != NULL)
 	{
-		neighbour_dump(self);
+		neighbour_dump(self, out);
 		if (self->nextNeighbour != NULL)
 		{
-			printf(", ");
-			list_dump(self->nextNeighbour);
+			fprintf(out, ", ");
+			list_dump(self->nextNeighbour, out);
 		}
 	}
 }
