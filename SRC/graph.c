@@ -193,13 +193,44 @@ void remove_edge(Graph *g, int nodeStart, int nodeEnd)
   printf("WIP!");
 }
 
+
 /*
  * Save the graph in a text format
  */
-void save_graph(Graph *g, char *path)
+void save_graph(Graph *g)
 {
-  // TODO
-  printf("WIP!");
+	char *string = malloc(sizeof(char *) * 10);
+	char *file = malloc(sizeof(char *)* 10);
+	strcpy(file,"./SAVE/");
+	int res = 0, res2 = 0;
+	bool isSaved = false;
+	FILE *savedFile;
+
+	while(!isSaved && res == 0){
+
+		printf("Please, write down the name of the graph :\n");
+		res = scanf("%s",string);
+
+		if(res != 0){
+			strcat(string,".txt");
+			strcat(file,string);
+			savedFile = fopen(file,"w");
+			if (savedFile == NULL)
+			{
+		    printf("Error opening file!\n");
+		    exit(1);
+			}
+			view_graph(g,savedFile);
+			res2 = fclose(savedFile);
+			if(res2 == 0){
+				isSaved = true;
+			}
+			
+		}else{
+			printf("Error the given name wasn't a string.\n");
+		}
+	}
+	printf("The graph was successfully saved !\n");
 }
 
 /*
@@ -216,9 +247,9 @@ void load_graph(Graph *g, char *path)
  */
 void view_graph(Graph *g, FILE *out)
 {
-  printf("\n----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "true" : "false");
+  fprintf(out, "\n----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "true" : "false");
 
-  printf("# node: neighbours\n");
+  fprintf(out,"# node: neighbours\n");
   for (int i = 0; i < g->nbMaxNodes; ++i)
   {
     fprintf(out, "%d: ", i+1);

@@ -4,9 +4,11 @@
 #include <stddef.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <dirent.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "list.h"
 
@@ -55,7 +57,7 @@ void remove_edge(Graph *g, int nodeStart, int nodeEnd);
 /*
  * Save the graph in a text format
  */
-void save_graph(Graph *g, char *path);
+void save_graph(Graph *g);
 
 /*
  * Load a graph

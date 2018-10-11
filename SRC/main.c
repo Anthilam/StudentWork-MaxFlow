@@ -51,6 +51,7 @@ int main()
 	remove_node(&g, 5);
 
 	view_graph(&g,stdout);
+	save_graph(&g);
 
 	destroy_graph(&g);
 }
