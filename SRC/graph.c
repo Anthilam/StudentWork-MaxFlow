@@ -249,7 +249,7 @@ void load_graph(Graph *g, char *path)
  */
 void view_graph(Graph *g, FILE *out)
 {
-  fprintf(out, "----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "true" : "false");
+  fprintf(out, "----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "y" : "n");
 
   fprintf(out,"# node: neighbours\n");
   for (int i = 0; i < g->nbMaxNodes; ++i)
