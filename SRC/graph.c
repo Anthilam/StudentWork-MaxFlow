@@ -217,8 +217,8 @@ void save_graph(Graph *g)
 			savedFile = fopen(file,"w");
 			if (savedFile == NULL)
 			{
-		    printf("Error opening file!\n");
-		    exit(1);
+		    	printf("Error opening file!\n");
+		 		exit(1);
 			}
 			view_graph(g,savedFile);
 			res2 = fclose(savedFile);
@@ -231,6 +231,8 @@ void save_graph(Graph *g)
 		}
 	}
 	printf("The graph was successfully saved !\n");
+	free(string);
+	free(file);
 }
 
 /*
@@ -247,7 +249,7 @@ void load_graph(Graph *g, char *path)
  */
 void view_graph(Graph *g, FILE *out)
 {
-  fprintf(out, "\n----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "true" : "false");
+  fprintf(out, "----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "true" : "false");
 
   fprintf(out,"# node: neighbours\n");
   for (int i = 0; i < g->nbMaxNodes; ++i)
