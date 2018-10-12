@@ -189,8 +189,44 @@ void add_edge(Graph *g, int nodeStart, int nodeEnd, bool symmetric, int weight)
  */
 void remove_edge(Graph *g, int nodeStart, int nodeEnd)
 {
-  // TODO
-  printf("WIP!");
+  printf("INFO:\tRemoving edge between %d and %d..\n", nodeStart, nodeEnd);
+  int realNodeStart = nodeStart - 1;
+  int realNodeEnd = nodeEnd - 1;
+
+  // Check the starting node number
+  if (nodeStart <= 0 || nodeStart > g->nbMaxNodes)
+  {
+    printf("ERROR:\tNode %d is out of range\n\tMin. node = 1, Max. node = %d\n", nodeStart, g->nbMaxNodes);
+  }
+  // Check the ending node number
+  else if (nodeEnd <= 0 || nodeEnd > g->nbMaxNodes)
+  {
+    printf("ERROR:\tNode %d is out of range\n\tMin. node = 1, Max. node = %d\n", nodeEnd, g->nbMaxNodes);
+  }
+  // Check the existence of the starting node
+  else if (g->adjList[realNodeStart].list == NULL)
+  {
+    printf("ERROR:\tNode %d doesn't exists\n", nodeStart);
+  }
+  // Check the existence of the ending node
+  else if (g->adjList[realNodeEnd].list == NULL)
+  {
+    printf("ERROR:\tNode %d doesn't exists\n", nodeEnd);
+  }
+  // Remove the edge between the two nodes
+  else
+  {
+    printf("\tRemoving node from list %d\n", realNodeStart);
+    neighbour_remove(g->adjList[realNodeStart].list, realNodeEnd);
+
+    if (!g->isDirected)
+    {
+      printf("\tRemoving node from list %d\n", realNodeEnd);
+      neighbour_remove(g->adjList[realNodeEnd].list, realNodeStart);
+    }
+
+    printf("\tEdge between %d and %d removed!\n", nodeStart, nodeEnd);
+  }
 }
 
 
@@ -199,40 +235,51 @@ void remove_edge(Graph *g, int nodeStart, int nodeEnd)
  */
 void save_graph(Graph *g)
 {
-	char *string = malloc(sizeof(char *) * 10);
-	char *file = malloc(sizeof(char *)* 10);
-	strcpy(file,"./SAVE/");
+	char *name = malloc(sizeof(char *) * 10);
+	char *file = malloc(sizeof(char *) * 10);
 	int res = 0, res2 = 0;
 	bool isSaved = false;
 	FILE *savedFile;
 
-	while(!isSaved && res == 0){
+  strcpy(file, "./SAVE/");
 
+	while (!isSaved && res == 0)
+  {
+    // Ask user input
 		printf("Please, write down the name of the graph :\n");
-		res = scanf("%s",string);
+		res = scanf("%s", name);
 
-		if(res != 0){
-			strcat(string,".txt");
-			strcat(file,string);
-			savedFile = fopen(file,"w");
+		if (res != 0)
+    {
+      // Open the file descriptor to save the graph
+			strcat(name, ".txt");
+			strcat(file, name);
+			savedFile = fopen(file, "w");
+
 			if (savedFile == NULL)
 			{
-		    	printf("Error opening file!\n");
+		    printf("ERROR:\tError when opening file!\n");
 		 		exit(1);
 			}
-			view_graph(g,savedFile);
+
+      // "Print" the graph in the file descriptor specified before
+			view_graph(g, savedFile);
 			res2 = fclose(savedFile);
-			if(res2 == 0){
+
+			if (res2 == 0)
+      {
 				isSaved = true;
 			}
-			
-		}else{
-			printf("Error the given name wasn't a string.\n");
+		}
+    else
+    {
+			printf("ERROR:\tThe given name wasn't a string\n");
 		}
 	}
-	printf("The graph was successfully saved !\n");
-	free(string);
-	free(file);
+
+  free(name);
+  free(file);
+	printf("INFO:\tThe graph was successfully saved!\n");
 }
 
 /*
