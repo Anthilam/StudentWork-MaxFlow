@@ -22,23 +22,14 @@ $(BIN)main: $(OBJ)main.o $(LIB)liblist.a $(LIB)libgraph.a
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o 	$@ $^ $(LDLIBS)
 
 # Regle de construction des .o
-#$(OBJ)%.o : $(SRC)%.c $(INCLUDE)%.h
-#	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+$(OBJ)%.o : $(SRC)%.c $(INCLUDE)%.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
-$(OBJ)main.o : $(SRC)main.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(SRC)main.c
+$(LIB)liblist.a : $(OBJ)list.o
+	ar rcs $(LIB)liblist.a $(OBJ)list.o
 
-$(OBJ)list.o : $(SRC)list.c $(INCLUDE)list.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(SRC)list.c
-
-$(OBJ)graph.o : $(SRC)graph.c $(INCLUDE)graph.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(SRC)graph.c
-
-$(LIB)liblist.a : list.o
-	ar rcs $(LIB)liblist.a list.o
-
-$(LIB)libgraph.a : graph.o
-	ar rcs $(LIB)libgraph.a graph.o
+$(LIB)libgraph.a : $(OBJ)graph.o
+	ar rcs $(LIB)libgraph.a $(OBJ)graph.o
 
 # Nettoyage des fichiers intermediaires
 clean :
@@ -47,3 +38,4 @@ clean :
 # Suppression de tous les fichiers issus de la compilation
 veryclean : clean
 	rm -f $(BIN)*
+	rm -f $(LIB)*
