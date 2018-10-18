@@ -60,6 +60,11 @@ void add_edge(Graph *g, int nodeStart, int nodeEnd, bool symmetric, int weight);
 void remove_edge(Graph *g, int nodeStart, int nodeEnd);
 
 /*
+* Open the directory and list all the saved graph
+*/
+void list_saved_file(Graph *g);
+
+/*
  * Save the graph in a text format
  */
 void save_graph(Graph *g);

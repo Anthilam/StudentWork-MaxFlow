@@ -44,7 +44,6 @@ void destroy_graph(Graph *g)
       neighbour_list_destroy(g->adjList[i].list);
     }
   }
-
   // Free the adjacency array
   free(g->adjList);
 
@@ -251,6 +250,42 @@ void remove_edge(Graph *g, int nodeStart, int nodeEnd)
 
 
 /*
+* Open the directory and list all the saved graph
+*/
+void list_saved_file(Graph *g){
+	DIR *rep;	
+	size_t i = 0;
+	char *string = malloc(sizeof(char *));
+	char path[32] = "./SAVE/";
+	int res = 0;
+
+	//We open the directory where the saved graph are stored
+	rep = opendir("./SAVE");
+	struct dirent *lecture;
+	printf("Here is the list of the available saved graph.\n");
+	while ((lecture = readdir(rep)))
+	{
+		//We list the saved file
+		if(strcmp(".",lecture->d_name) != 0 && strcmp("..",lecture->d_name) != 0 && strcmp(".blank",lecture->d_name) != 0)
+		{
+			printf("File number : %zu ; File name : %s\n",i, lecture->d_name);
+			i++;
+		}		
+	}
+	printf("Enter the complete (filename.txt) name of the file that you want to open :\n");
+	res = scanf("%s",string);
+	strcat(path,string);
+	if(res == 0)
+	{
+		printf("The character given is not a string !\n");
+	}else
+	{
+		//If the name of the file is correct we load it
+		load_graph(g, path);
+	}
+}
+
+/*
  * Save the graph in a text format
  */
 void save_graph(Graph *g)
@@ -308,7 +343,7 @@ void save_graph(Graph *g)
 void load_graph(Graph *g, char *path)
 {
 	char line[128];
-	int size = 0, lineNumber = 0, inNode, c = 1, outNode, weight;
+	int size = 0, lineNumber = 0, inNode, c = 1, outNode, weight, ret;
 	char *position = malloc(sizeof(char *));
 	char *direction = malloc(sizeof(char *));
 	char *token, *subtoken;
@@ -390,6 +425,11 @@ void load_graph(Graph *g, char *path)
 			}
 			lineNumber ++;
 		}		
+	}
+	ret = fclose(fp);
+	if(ret != 0){
+		printf("Error while closing file !.\n");
+		exit(1);
 	}
 }
 
