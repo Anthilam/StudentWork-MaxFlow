@@ -19,7 +19,7 @@ int main()
 {
 	Graph g;
 
-	create_graph(&g, 10);
+	create_graph(&g, 10, true);/*
 
 	add_node(&g, 0);
 	add_node(&g, 1);
@@ -38,25 +38,27 @@ int main()
 	add_edge(&g, 2, 10, true, 50);
 	add_edge(&g, 3, 2, true, 6565);
 
-	view_graph(&g,stdout);
+	view_graph(&g,stdout,false);
 
 	remove_edge(&g, 1, 2);
 
-	view_graph(&g, stdout);
+	view_graph(&g, stdout,false);
 
 	remove_node(&g, -1);
 	remove_node(&g, 65);
 	remove_node(&g, 1);
 	remove_node(&g, 1);
 
-	view_graph(&g,stdout);
+	view_graph(&g,stdout,false);
 
 	remove_node(&g, 10);
 	remove_node(&g, 5);
 
-	view_graph(&g,stdout);
+	view_graph(&g,stdout,false);
+	save_graph(&g);*/
+	load_graph(&g,"./SAVE/hello.txt");
+	view_graph(&g, stdout, false);
 	save_graph(&g);
-
 	destroy_graph(&g);
 }
 

@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #include "list.h"
 
@@ -27,7 +28,7 @@ typedef struct Graph {
 /*
  * Create a graph
  */
-void create_graph(Graph *g, int nbNodes);
+void create_graph(Graph *g, int nbNodes, bool isDirected);
 
 /*
  * Destroy a graph
@@ -39,6 +40,10 @@ void destroy_graph(Graph *g);
  */
 void add_node(Graph *g, int nbNode);
 
+/*
+* Check is a node is in the graph
+*/
+bool is_in_graph(Graph *g, int nbNode);
 /*
  * Remove a node of a graph
  */
@@ -67,6 +72,6 @@ void load_graph(Graph *g, char *path);
 /*
  * View the graph in the terminal
  */
-void view_graph(Graph *g, FILE *out);
+void view_graph(Graph *g, FILE *out, bool forSave);
 
 #endif // GRAPH_H

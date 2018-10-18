@@ -3,11 +3,11 @@
 /*
  * Create a graph
  */
-void create_graph(Graph *g, int nbNodes)
+void create_graph(Graph *g, int nbNodes, bool isDirected)
 {
   printf("INFO:\tCreating graph..\n");
 
-  g->isDirected = false;    // Set the graph to undirected by default
+  g->isDirected = isDirected;    // Set the graph to undirected by default
   g->nbMaxNodes = nbNodes;  // Set the max number of nodes
 
   printf("\tAllocating memory for adjacency lists..\n");
@@ -65,7 +65,7 @@ void add_node(Graph *g, int nbNode)
     printf("ERROR:\tNode %d not added, %d is out of range\n\tMin. node = 1, Max. node = %d\n", nbNode, nbNode, g->nbMaxNodes);
   }
   // Check if the node already exists
-  else if (g->adjList[realNbNode].list != NULL)
+  else if (is_in_graph(g,nbNode))
   {
     printf("ERROR:\tNode %d not added, node %d already exists\n", nbNode, nbNode);
   }
@@ -85,6 +85,26 @@ void add_node(Graph *g, int nbNode)
 
     printf("\tNode %d has been added to the graph!\n", nbNode);
   }
+}
+
+/*
+* Check is a node is in the graph
+*/
+bool is_in_graph(Graph *g, int nbNode){
+	printf("INFO:\tChecking node..\n");
+  int realNbNode = nbNode - 1;
+
+  // Check the node number
+  if (nbNode <= 0 || nbNode > g->nbMaxNodes)
+  {
+    printf("ERROR:\tNode %d not added, %d is out of range\n\tMin. node = 1, Max. node = %d\n", nbNode, nbNode, g->nbMaxNodes);
+  }
+
+	if (g->adjList[realNbNode].list != NULL)
+	{
+		return true;
+	}
+	return false;
 }
 
 /*
@@ -263,7 +283,7 @@ void save_graph(Graph *g)
 			}
 
       // "Print" the graph in the file descriptor specified before
-			view_graph(g, savedFile);
+			view_graph(g, savedFile, true);
 			res2 = fclose(savedFile);
 
 			if (res2 == 0)
@@ -287,23 +307,112 @@ void save_graph(Graph *g)
  */
 void load_graph(Graph *g, char *path)
 {
-  // TODO
-  printf("WIP!");
+	char line[128];
+	int size = 0, lineNumber = 0, inNode, c = 1, outNode, weight;
+	char *position = malloc(sizeof(char *));
+	char *direction = malloc(sizeof(char *));
+	char *token, *subtoken;
+	char *saveptr1, *saveptr2;
+
+	//Loading file where graph is stored
+	FILE *fp = fopen(path, "r");
+	if(fp == NULL){
+		printf("Error the file wasn't found !\n");
+		exit(1);
+	}
+	//Parsing each line of the file
+	while(fgets(line, sizeof(line), fp)){
+		position = strchr(line,'#');
+		if(position == NULL){
+			//Checking the number of the line
+			switch (lineNumber){
+				case 0 :
+					//First real line is the size of the graph
+					size = atoi(line);
+					printf("%d\n",size);
+					break;
+			
+			
+				case 1 :
+					//This line says if the graph is directed or not
+					direction = strchr(line, 'y');
+					if(direction != NULL){
+						create_graph(g, size, true);
+					}
+			
+					direction = strchr(line, 'n');
+					if(direction != NULL){
+						create_graph(g, size, false);
+					}
+					break;
+
+				default :
+					//Else we parse the lines which correspond to nodes
+					if((inNode = atoi(line)) != 0){
+						//We add starting nodes to the graph
+						if(!is_in_graph(g,inNode)){
+							add_node(g,inNode);
+						}
+					}
+					token = strtok_r(line,":(),", &saveptr1);
+					while (token != NULL)
+    			{		
+						//We juste wants ending nodes with their weigths
+						direction = strchr(token, '/');
+						if(direction != NULL)
+						{
+							subtoken = strtok_r(token, "/", &saveptr2);
+							while(subtoken != NULL){
+								if(c == 1)
+								{
+									outNode = atoi(subtoken);
+									c++;
+								}else
+								{
+									weight = atoi(subtoken);
+									c--;
+									//Adding ending nodes to the graph
+									if(outNode != -1 && weight != 0)
+									{
+										if(!is_in_graph(g,outNode))
+										{
+											add_node(g,outNode);
+										}
+										//Adding the edges which are stored in the file
+										add_edge(g, inNode, outNode, false, weight);
+									}
+								}
+								subtoken = strtok_r(NULL, "/", &saveptr2);
+							}
+						}
+						token = strtok_r(NULL, ":(),", &saveptr1);
+					}
+			}
+			lineNumber ++;
+		}		
+	}
 }
 
 /*
  * View the graph in the terminal
  */
-void view_graph(Graph *g, FILE *out)
+void view_graph(Graph *g, FILE *out, bool forSave)
 {
-  fprintf(out, "----- VIEW GRAPH -----\n# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "y" : "n");
+  if(!forSave){
+	fprintf(out, "----- VIEW GRAPH -----\n");
+  }
+  fprintf(out, "# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "y" : "n");
 
   fprintf(out,"# node: neighbours\n");
   for (int i = 0; i < g->nbMaxNodes; ++i)
   {
-    fprintf(out, "%d: ", i+1);
-    list_dump(g->adjList[i].list,out);
-    fprintf(out, "\n");
+		if(g->adjList[i].list != NULL){
+	    fprintf(out, "%d: ", i+1);
+  	  list_dump(g->adjList[i].list,out);
+  	  fprintf(out, "\n");
+		}
   }
-  fprintf(out, "----------------------\n");
+  if(!forSave){
+    fprintf(out, "----------------------\n");
+  }
 }
