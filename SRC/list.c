@@ -1,3 +1,12 @@
+/***********************************************************************
+ * Program :		list.c
+ *
+ * Authors :		BARBEAUT Reynald, GUY Timothée Guy
+ *
+ * Resume :			Library for linked list manipulation
+ *
+ ************************************************************************/
+
 #include "list.h"
 
 /*

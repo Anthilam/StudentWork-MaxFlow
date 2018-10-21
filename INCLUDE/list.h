@@ -1,3 +1,12 @@
+/***********************************************************************
+ * Program :  list.h
+ *
+ * Authors :  BARBEAUT Reynald, GUY Timothée Guy
+ *
+ * Resume :   include for list.c
+ *
+ ************************************************************************/
+
 #ifndef LIST_H
 #define LIST_H
 
@@ -13,7 +22,6 @@ typedef struct Neighbour {
 	int neighbour;
 	int weight;
 	struct Neighbour *nextNeighbour;
-	//struct Neighbour *previousNeighbour;
 } Neighbour;
 
 /*

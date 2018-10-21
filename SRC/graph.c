@@ -1,3 +1,12 @@
+/***********************************************************************
+ * Program :		graph.c
+ *
+ * Authors :		BARBEAUT Reynald, GUY Timothée Guy
+ *
+ * Resume :			Library for graph manipulation
+ *
+ ************************************************************************/
+
 #include "graph.h"
 
 /*
@@ -248,39 +257,42 @@ void remove_edge(Graph *g, int nodeStart, int nodeEnd)
   }
 }
 
-
 /*
 * Open the directory and list all the saved graph
 */
 void list_saved_file(Graph *g){
-	DIR *rep;	
+	DIR *rep;
 	size_t i = 0;
 	char *string = malloc(sizeof(char *));
 	char path[32] = "./SAVE/";
 	int res = 0;
 
-	//We open the directory where the saved graph are stored
+	// We open the directory where the saved graph are stored
 	rep = opendir("./SAVE");
 	struct dirent *lecture;
 	printf("Here is the list of the available saved graph.\n");
+
 	while ((lecture = readdir(rep)))
 	{
 		//We list the saved file
-		if(strcmp(".",lecture->d_name) != 0 && strcmp("..",lecture->d_name) != 0 && strcmp(".blank",lecture->d_name) != 0)
+		if (strcmp(".", lecture->d_name) != 0 && strcmp("..", lecture->d_name) != 0 && strcmp(".blank", lecture->d_name) != 0)
 		{
-			printf("File number : %zu ; File name : %s\n",i, lecture->d_name);
+			printf("File number : %zu ; File name : %s\n", i, lecture->d_name);
 			i++;
-		}		
+		}
 	}
+
 	printf("Enter the complete (filename.txt) name of the file that you want to open :\n");
 	res = scanf("%s",string);
 	strcat(path,string);
-	if(res == 0)
+
+	if (res == 0)
 	{
 		printf("The character given is not a string !\n");
-	}else
+	}
+  //If the name of the file is correct we load it
+  else
 	{
-		//If the name of the file is correct we load it
 		load_graph(g, path);
 	}
 }
@@ -349,70 +361,83 @@ void load_graph(Graph *g, char *path)
 	char *token, *subtoken;
 	char *saveptr1, *saveptr2;
 
-	//Loading file where graph is stored
+	// Loading file where graph is stored
 	FILE *fp = fopen(path, "r");
-	if(fp == NULL){
+	if (fp == NULL)
+  {
 		printf("Error the file wasn't found !\n");
 		exit(1);
 	}
-	//Parsing each line of the file
-	while(fgets(line, sizeof(line), fp)){
+
+	// Parsing each line of the file
+	while (fgets(line, sizeof(line), fp))
+  {
 		position = strchr(line,'#');
-		if(position == NULL){
-			//Checking the number of the line
-			switch (lineNumber){
+		if (position == NULL)
+    {
+			// Checking the number of the line
+			switch (lineNumber)
+      {
 				case 0 :
-					//First real line is the size of the graph
+					// First real line is the size of the graph
 					size = atoi(line);
 					printf("%d\n",size);
 					break;
-			
-			
 				case 1 :
-					//This line says if the graph is directed or not
+					// This line says if the graph is directed or not
 					direction = strchr(line, 'y');
-					if(direction != NULL){
+					if (direction != NULL)
+          {
 						create_graph(g, size, true);
 					}
-			
+
 					direction = strchr(line, 'n');
-					if(direction != NULL){
+					if (direction != NULL)
+          {
 						create_graph(g, size, false);
 					}
 					break;
-
 				default :
-					//Else we parse the lines which correspond to nodes
-					if((inNode = atoi(line)) != 0){
-						//We add starting nodes to the graph
-						if(!is_in_graph(g,inNode)){
+					// Else we parse the lines which correspond to nodes
+					if ((inNode = atoi(line)) != 0)
+          {
+						// We add starting nodes to the graph
+						if (!is_in_graph(g,inNode))
+            {
 							add_node(g,inNode);
 						}
 					}
+
 					token = strtok_r(line,":(),", &saveptr1);
+
 					while (token != NULL)
-    			{		
-						//We juste wants ending nodes with their weigths
+    			{
+						// We juste wants ending nodes with their weigths
 						direction = strchr(token, '/');
-						if(direction != NULL)
+						if (direction != NULL)
 						{
 							subtoken = strtok_r(token, "/", &saveptr2);
-							while(subtoken != NULL){
-								if(c == 1)
+
+							while (subtoken != NULL)
+              {
+								if (c == 1)
 								{
 									outNode = atoi(subtoken);
 									c++;
-								}else
+								}
+                else
 								{
 									weight = atoi(subtoken);
 									c--;
-									//Adding ending nodes to the graph
-									if(outNode != -1 && weight != 0)
+
+									// Adding ending nodes to the graph
+									if (outNode != -1 && weight != 0)
 									{
-										if(!is_in_graph(g,outNode))
+										if (!is_in_graph(g,outNode))
 										{
 											add_node(g,outNode);
 										}
+
 										//Adding the edges which are stored in the file
 										add_edge(g, inNode, outNode, false, weight);
 									}
@@ -424,10 +449,12 @@ void load_graph(Graph *g, char *path)
 					}
 			}
 			lineNumber ++;
-		}		
+		}
 	}
+
 	ret = fclose(fp);
-	if(ret != 0){
+	if (ret != 0)
+  {
 		printf("Error while closing file !.\n");
 		exit(1);
 	}
@@ -438,21 +465,26 @@ void load_graph(Graph *g, char *path)
  */
 void view_graph(Graph *g, FILE *out, bool forSave)
 {
-  if(!forSave){
-	fprintf(out, "----- VIEW GRAPH -----\n");
+  if (!forSave)
+  {
+	  fprintf(out, "----- VIEW GRAPH -----\n");
   }
+
   fprintf(out, "# maximum number of nodes\n%d\n#directed\n%s\n", g->nbMaxNodes, g->isDirected ? "y" : "n");
 
   fprintf(out,"# node: neighbours\n");
   for (int i = 0; i < g->nbMaxNodes; ++i)
   {
-		if(g->adjList[i].list != NULL){
+		if (g->adjList[i].list != NULL)
+    {
 	    fprintf(out, "%d: ", i+1);
-  	  list_dump(g->adjList[i].list,out);
+  	  list_dump(g->adjList[i].list, out);
   	  fprintf(out, "\n");
 		}
   }
-  if(!forSave){
+
+  if (!forSave)
+  {
     fprintf(out, "----------------------\n");
   }
 }

@@ -1,3 +1,12 @@
+/***********************************************************************
+ * Program :  graph.h
+ *
+ * Authors :  BARBEAUT Reynald, GUY Timothée Guy
+ *
+ * Resume :   include for graph.c
+ *
+ ************************************************************************/
+
 #ifndef GRAPH_H
 #define GRAPH_H
 

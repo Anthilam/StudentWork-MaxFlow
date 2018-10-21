@@ -1,4 +1,11 @@
-# Makefile --- Contruction de la liste des sources et objets ---
+#***********************************************************************
+# * Program :		graph.c
+# *
+# * Authors :		BARBEAUT Reynald, GUY Timothée Guy
+# *
+# * Resume :			Library for graph manipulation
+# *
+#***********************************************************************
 
 # Variables propres a cette application
 MAIN = main
