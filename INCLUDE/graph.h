@@ -88,4 +88,15 @@ void load_graph(Graph *g, char *path);
  */
 void view_graph(Graph *g, FILE *out, bool forSave);
 
+/*
+* Check if there is a path between two nodes
+*/
+bool has_path(Graph *g, int nodeStart, int nodeEnd);
+
+/*
+* Check if there is an edge between two nodes
+*/
+bool has_edge(Graph *g, int nodeStart, int nodeEnd);
+
+
 #endif // GRAPH_H

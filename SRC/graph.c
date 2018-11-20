@@ -476,10 +476,10 @@ void view_graph(Graph *g, FILE *out, bool forSave)
   for (int i = 0; i < g->nbMaxNodes; ++i)
   {
 		if (g->adjList[i].list != NULL)
-    {
-	    fprintf(out, "%d: ", i+1);
-  	  list_dump(g->adjList[i].list, out);
-  	  fprintf(out, "\n");
+        {
+	        fprintf(out, "%d: ", i+1);
+  	        list_dump(g->adjList[i].list, out);
+  	        fprintf(out, "\n");
 		}
   }
 
@@ -488,3 +488,49 @@ void view_graph(Graph *g, FILE *out, bool forSave)
     fprintf(out, "----------------------\n");
   }
 }
+
+
+/*
+ * Check if there is a node between two nodes
+ */
+bool has_path(Graph *g, int nodeStart, int nodeEnd)
+{
+    if(has_edge(g,nodeStart,nodeEnd))
+    {
+        return true;
+    }
+
+    Neighbour *current, *next;
+
+    current = g->adjList[nodeStart-1].list;
+    while(current != NULL)
+    {
+        next = current->nextNeighbour;
+        current = next;
+    }
+
+    return false;
+}
+
+
+/*
+ * Check if there is an edge between two nodes
+ */
+bool has_edge(Graph *g, int nodeStart, int nodeEnd)
+{
+    Neighbour *current, *next;
+
+    current = g->adjList[nodeStart-1].list;
+    while(current != NULL)
+    {
+        if(current->neighbour+1 == nodeEnd)
+        {
+            return true;
+        }
+        printf("Issou : %d \n",current->neighbour);
+        next = current->nextNeighbour;
+        current = next;
+    }
+    return false;
+}
+

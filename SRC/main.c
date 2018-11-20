@@ -11,6 +11,25 @@
 
 int main() {
 	Graph g;
+	create_graph(&g, 5, true);
+	add_node(&g, 1);
+	add_node(&g, 2);
+	add_node(&g, 4);
+
+	add_edge(&g,1,2,false,2);
+	add_edge(&g,2,4,false,1);
+	add_edge(&g,1,4,false,1);
+
+
+
+	view_graph(&g,stdout,false);
+
+	bool test = has_path(&g,1,4);
+	if(test){
+		printf("cébon c dedans lol\n");
+	}
+
+	/*
 	bool was_created = false, isDirected, symmetric;
 	char *string = malloc(sizeof(char *));
 	char *string2 = malloc(sizeof(char *));
@@ -260,9 +279,9 @@ int main() {
 
 	// Free memory
 	if (was_created)
-	{
+	{*/
 		destroy_graph(&g);
-	}
+	/*}
 	free(string);
-	free(string2);
+	free(string2);*/
 }
