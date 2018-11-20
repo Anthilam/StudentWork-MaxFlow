@@ -24,7 +24,7 @@ int main() {
 
 	view_graph(&g,stdout,false);
 
-	bool test = has_path(&g,1,4);
+	bool test = has_path_BFS(&g,1,4);
 	if(test){
 		printf("cébon c dedans lol\n");
 	}

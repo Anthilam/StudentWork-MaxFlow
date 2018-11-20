@@ -19,18 +19,21 @@ LIB = ./LIB/
 CC = gcc -g
 CFLAGS = -O4 -W -Wall
 CPPFLAGS = -I$(INCLUDE)
-LDLIBS = -L$(LIB) -lm -lgraph -llist
+LDLIBS = -L$(LIB) -lm -lgraph -llist -llinkedlist
 
 # Cible principale
 all : $(BIN)main
 
 # Regle principale avec l'edition de lien
-$(BIN)main: $(OBJ)main.o $(LIB)liblist.a $(LIB)libgraph.a
+$(BIN)main: $(OBJ)main.o $(LIB)liblinkedlist.a $(LIB)liblist.a $(LIB)libgraph.a
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o 	$@ $^ $(LDLIBS)
 
 # Regle de construction des .o
 $(OBJ)%.o : $(SRC)%.c $(INCLUDE)%.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+$(LIB)liblinkedlist.a : $(OBJ)linkedlist.o
+	ar rcs $(LIB)liblinkedlist.a $(OBJ)linkedlist.o
 
 $(LIB)liblist.a : $(OBJ)list.o
 	ar rcs $(LIB)liblist.a $(OBJ)list.o

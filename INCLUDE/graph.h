@@ -21,6 +21,7 @@
 #include <ctype.h>
 
 #include "list.h"
+#include "linkedlist.h"
 
 // Adjacency list structure
 typedef struct Adj {
@@ -89,14 +90,11 @@ void load_graph(Graph *g, char *path);
 void view_graph(Graph *g, FILE *out, bool forSave);
 
 /*
-* Check if there is a path between two nodes
+* Check if there is a path between two nodes with BFS
 */
-bool has_path(Graph *g, int nodeStart, int nodeEnd);
+bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd);
 
-/*
-* Check if there is an edge between two nodes
-*/
-bool has_edge(Graph *g, int nodeStart, int nodeEnd);
+
 
 
 #endif // GRAPH_H

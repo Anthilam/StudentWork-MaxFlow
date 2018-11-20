@@ -13,4 +13,4 @@ add_executable(graph
         SRC/list.c
         SRC/main.c
         Makefile
-        README.md)
+        README.md SRC/linkedlist.c INCLUDE/linkedlist.h)

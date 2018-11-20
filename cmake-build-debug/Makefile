@@ -150,6 +150,33 @@ SRC/graph.c.s:
 	$(MAKE) -f CMakeFiles/graph.dir/build.make CMakeFiles/graph.dir/SRC/graph.c.s
 .PHONY : SRC/graph.c.s
 
+SRC/linkedlist.o: SRC/linkedlist.c.o
+
+.PHONY : SRC/linkedlist.o
+
+# target to build an object file
+SRC/linkedlist.c.o:
+	$(MAKE) -f CMakeFiles/graph.dir/build.make CMakeFiles/graph.dir/SRC/linkedlist.c.o
+.PHONY : SRC/linkedlist.c.o
+
+SRC/linkedlist.i: SRC/linkedlist.c.i
+
+.PHONY : SRC/linkedlist.i
+
+# target to preprocess a source file
+SRC/linkedlist.c.i:
+	$(MAKE) -f CMakeFiles/graph.dir/build.make CMakeFiles/graph.dir/SRC/linkedlist.c.i
+.PHONY : SRC/linkedlist.c.i
+
+SRC/linkedlist.s: SRC/linkedlist.c.s
+
+.PHONY : SRC/linkedlist.s
+
+# target to generate assembly for a file
+SRC/linkedlist.c.s:
+	$(MAKE) -f CMakeFiles/graph.dir/build.make CMakeFiles/graph.dir/SRC/linkedlist.c.s
+.PHONY : SRC/linkedlist.c.s
+
 SRC/list.o: SRC/list.c.o
 
 .PHONY : SRC/list.o
@@ -216,6 +243,9 @@ help:
 	@echo "... SRC/graph.o"
 	@echo "... SRC/graph.i"
 	@echo "... SRC/graph.s"
+	@echo "... SRC/linkedlist.o"
+	@echo "... SRC/linkedlist.i"
+	@echo "... SRC/linkedlist.s"
 	@echo "... SRC/list.o"
 	@echo "... SRC/list.i"
 	@echo "... SRC/list.s"

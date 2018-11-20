@@ -7,6 +7,7 @@
  *
  ************************************************************************/
 
+
 #include "graph.h"
 
 /*
@@ -493,44 +494,70 @@ void view_graph(Graph *g, FILE *out, bool forSave)
 /*
  * Check if there is a node between two nodes
  */
-bool has_path(Graph *g, int nodeStart, int nodeEnd)
+bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd)
 {
-    if(has_edge(g,nodeStart,nodeEnd))
+    if(nodeStart == nodeEnd)
     {
         return true;
     }
+    size_t queueSize;
+    int u,v;
+    int *color = malloc(sizeof(int) * g->nbMaxNodes);
+    int *d = malloc(sizeof(int) * g->nbMaxNodes);
+    int *parent = malloc(sizeof(int) * g->nbMaxNodes);
+    struct linkedlist *queue = malloc(sizeof(struct linkedlist));
+    struct Neighbour *current, *next;
 
-    Neighbour *current, *next;
-
-    current = g->adjList[nodeStart-1].list;
-    while(current != NULL)
+    for (size_t i = 0; i < g->nbMaxNodes; i++)
     {
-        next = current->nextNeighbour;
-        current = next;
+        color[i] = 0;
+        d[i] = -1;
+        parent[i] = -1;
     }
 
-    return false;
-}
+    color[nodeStart] = 1;
+    d[nodeStart] = 0;
 
+    linkedlist_create(queue);
+    linkedlist_add_back(queue,nodeStart);
 
-/*
- * Check if there is an edge between two nodes
- */
-bool has_edge(Graph *g, int nodeStart, int nodeEnd)
-{
-    Neighbour *current, *next;
-
-    current = g->adjList[nodeStart-1].list;
-    while(current != NULL)
+    while(!linkedlist_is_empty(queue))
     {
-        if(current->neighbour+1 == nodeEnd)
+        linkedlist_dump(queue);
+        queueSize = linkedlist_size(queue);
+        u = linkedlist_get(queue, queueSize-1);
+        if(u == nodeEnd)
         {
+            linkedlist_dump(queue);
             return true;
         }
-        printf("Issou : %d \n",current->neighbour);
-        next = current->nextNeighbour;
-        current = next;
+        linkedlist_remove(queue,queueSize-1);
+
+        current = g->adjList[u].list;
+        next = g->adjList[u].list->nextNeighbour;
+
+
+        while(current->neighbour != -1)
+        {
+            v = current->neighbour+1;
+            if(color[v] == 0)
+            {
+                color[v] = 1;
+                d[v] = d[u] + 1;
+                parent[v] = u;
+                linkedlist_add_back(queue,v);
+                linkedlist_dump(queue);
+            }
+            current = next;
+            next = current->nextNeighbour;
+        }
+        color[u] = 3;
     }
+
+    linkedlist_destroy(queue);
     return false;
 }
+
+
+
 

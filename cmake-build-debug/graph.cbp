@@ -89,6 +89,9 @@
 		<Unit filename="/home/barbeaut/Bureau/projet/graph/INCLUDE/graph.h">
 			<Option target="graph"/>
 		</Unit>
+		<Unit filename="/home/barbeaut/Bureau/projet/graph/INCLUDE/linkedlist.h">
+			<Option target="graph"/>
+		</Unit>
 		<Unit filename="/home/barbeaut/Bureau/projet/graph/INCLUDE/list.h">
 			<Option target="graph"/>
 		</Unit>
@@ -102,6 +105,9 @@
 			<Option target="graph"/>
 		</Unit>
 		<Unit filename="/home/barbeaut/Bureau/projet/graph/SRC/graph.c">
+			<Option target="graph"/>
+		</Unit>
+		<Unit filename="/home/barbeaut/Bureau/projet/graph/SRC/linkedlist.c">
 			<Option target="graph"/>
 		</Unit>
 		<Unit filename="/home/barbeaut/Bureau/projet/graph/SRC/list.c">
