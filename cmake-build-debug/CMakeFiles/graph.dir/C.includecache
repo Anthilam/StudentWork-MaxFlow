@@ -54,7 +54,17 @@ stdbool.h
 string.h
 -
 
-/home/barbeaut/Bureau/projet/graph/SRC/graph.c
+../INCLUDE/main.h
+stdio.h
+-
+stdlib.h
+-
+list.h
+../INCLUDE/list.h
 graph.h
-/home/barbeaut/Bureau/projet/graph/SRC/graph.h
+../INCLUDE/graph.h
+
+/home/barbeaut/Bureau/projet/graph/SRC/main.c
+main.h
+/home/barbeaut/Bureau/projet/graph/SRC/main.h
 

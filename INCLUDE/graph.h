@@ -92,7 +92,7 @@ void view_graph(Graph *g, FILE *out, bool forSave);
 /*
 * Check if there is a path between two nodes with BFS
 */
-bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd);
+bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path);
 
 
 

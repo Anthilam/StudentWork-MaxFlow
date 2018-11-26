@@ -494,7 +494,7 @@ void view_graph(Graph *g, FILE *out, bool forSave)
 /*
  * Check if there is a node between two nodes
  */
-bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd)
+bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
 {
     if(nodeStart == nodeEnd)
     {
@@ -519,23 +519,22 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd)
     d[nodeStart] = 0;
 
     linkedlist_create(queue);
+    linkedlist_create(path);
     linkedlist_add_back(queue,nodeStart);
 
     while(!linkedlist_is_empty(queue))
     {
-        linkedlist_dump(queue);
         queueSize = linkedlist_size(queue);
         u = linkedlist_get(queue, queueSize-1);
+        linkedlist_add_back(path,u);
         if(u == nodeEnd)
         {
-            linkedlist_dump(queue);
             return true;
         }
         linkedlist_remove(queue,queueSize-1);
 
-        current = g->adjList[u].list;
-        next = g->adjList[u].list->nextNeighbour;
-
+        current = g->adjList[u-1].list;
+        next = g->adjList[u-1].list->nextNeighbour;
 
         while(current->neighbour != -1)
         {
@@ -546,7 +545,6 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd)
                 d[v] = d[u] + 1;
                 parent[v] = u;
                 linkedlist_add_back(queue,v);
-                linkedlist_dump(queue);
             }
             current = next;
             next = current->nextNeighbour;

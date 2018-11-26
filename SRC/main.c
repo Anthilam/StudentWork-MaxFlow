@@ -14,20 +14,29 @@ int main() {
 	create_graph(&g, 5, true);
 	add_node(&g, 1);
 	add_node(&g, 2);
+	add_node(&g, 3);
 	add_node(&g, 4);
 
-	add_edge(&g,1,2,false,2);
+
+    add_edge(&g,1,2,false,2);
+    add_edge(&g,1,3,false,2);
+    add_edge(&g,1,1,false,2);
+
+	add_edge(&g,2,1,false,2);
 	add_edge(&g,2,4,false,1);
-	add_edge(&g,1,4,false,1);
 
 
 
 	view_graph(&g,stdout,false);
+	struct linkedlist *path = malloc(sizeof(struct linkedlist));
 
-	bool test = has_path_BFS(&g,1,4);
+	bool test = has_path_BFS(&g,1,4, path);
 	if(test){
 		printf("cébon c dedans lol\n");
+		linkedlist_dump(path);
 	}
+
+	linkedlist_destroy(path);
 
 	/*
 	bool was_created = false, isDirected, symmetric;
