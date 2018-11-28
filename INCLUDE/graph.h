@@ -94,7 +94,14 @@ void view_graph(Graph *g, FILE *out, bool forSave);
 */
 bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path);
 
+/*
+* Check if there is a path between two nodes with DFS
+*/
+bool has_path_DFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path);
 
-
+/*
+* Visit for the recursive method
+*/
+bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, struct linkedlist *path);
 
 #endif // GRAPH_H

@@ -11,32 +11,54 @@
 
 int main() {
 	Graph g;
-	create_graph(&g, 5, true);
+	create_graph(&g, 6, true);
 	add_node(&g, 1);
 	add_node(&g, 2);
 	add_node(&g, 3);
 	add_node(&g, 4);
+	add_node(&g, 5);
 
-
-    add_edge(&g,1,2,false,2);
-    add_edge(&g,1,3,false,2);
+	add_edge(&g,1,3,false,2);
+	add_edge(&g,1,2,false,2);
     add_edge(&g,1,1,false,2);
+	add_edge(&g,3,5,false,1);
 
+
+	add_edge(&g,2,3,false,2);
 	add_edge(&g,2,1,false,2);
-	add_edge(&g,2,4,false,1);
+	add_edge(&g,2,2,false,2);
+	add_edge(&g,3,5,false,1);
 
+
+
+	add_edge(&g,3,4,false,1);
+	add_edge(&g,3,1,false,1);
+	add_edge(&g,3,2,false,1);
+	add_edge(&g,3,3,false,1);
+	add_edge(&g,3,5,false,1);
 
 
 	view_graph(&g,stdout,false);
 	struct linkedlist *path = malloc(sizeof(struct linkedlist));
+	linkedlist_create(path);
+	struct linkedlist *path2 = malloc(sizeof(struct linkedlist));
+	linkedlist_create(path2);
 
 	bool test = has_path_BFS(&g,1,4, path);
+	bool test2 = has_path_DFS(&g,1,4,path2);
 	if(test){
 		printf("cébon c dedans lol\n");
 		linkedlist_dump(path);
 	}
 
+	if(test2){
+		printf("cébon c dedans 3 lol\n");
+		linkedlist_dump(path2);
+	}
+
 	linkedlist_destroy(path);
+	linkedlist_destroy(path2);
+	free(path);
 
 	/*
 	bool was_created = false, isDirected, symmetric;
