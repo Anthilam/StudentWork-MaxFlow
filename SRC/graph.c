@@ -515,11 +515,11 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
         parent[i] = -1;
     }
 
-    color[nodeStart] = 1;
+    color[nodeStart-1] = 1;
     d[nodeStart] = 0;
 
     linkedlist_create(queue);
-    linkedlist_add_back(queue,nodeStart);
+    linkedlist_add_back(queue,nodeStart-1);
 
     while(!linkedlist_is_empty(queue))
     {
@@ -527,9 +527,6 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
         u = linkedlist_get(queue, queueSize-1);
         if(u == nodeEnd)
         {
-            for(int i = 0; i < g->nbMaxNodes; i++){
-                printf("%d -> %d\n",i,parent[i]);
-            }
             linkedlist_destroy(queue);
             free(queue);
             free(color);
@@ -539,12 +536,12 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
         }
         linkedlist_remove(queue,queueSize-1);
 
-        current = g->adjList[u-1].list;
-        next = g->adjList[u-1].list->nextNeighbour;
+        current = g->adjList[u].list;
+        next = g->adjList[u].list->nextNeighbour;
 
         while(current->neighbour != -1)
         {
-            v = current->neighbour+1;
+            v = current->neighbour;
             if(color[v] == 0)
             {
                 color[v] = 1;
@@ -571,27 +568,30 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
 */
 bool has_path_DFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path){
     int *color = malloc(sizeof(int) * g->nbMaxNodes);
+    int *parent = malloc(sizeof(int) * g->nbMaxNodes);
     struct Neighbour *current, *next;
     int v;
-    size_t size;
     bool retour;
     for(int i = 0; i < g->nbMaxNodes; i++){
         color[i] = 0;
+        parent[i] = -1;
     }
-    color[nodeStart] = 1;
+    color[nodeStart-1] = 1;
 
     current = g->adjList[nodeStart-1].list;
     next = g->adjList[nodeStart-1].list->nextNeighbour;
 
     while(current->neighbour != -1)
     {
-        v = current->neighbour+1;
-        size = linkedlist_size(path);
+        v = current->neighbour;
+        printf("%d - ",v);
         if(color[v] == 0)
         {
-            retour = DFS_visit(g,nodeEnd,v,color,path);
+            parent[v] = nodeStart;
+            retour = DFS_visit(g,nodeEnd,v,color, parent, path);
             if(retour)
             {
+                free(parent);
                 free(color);
                 return retour;
             }
@@ -600,6 +600,7 @@ bool has_path_DFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
         current = next;
         next = current->nextNeighbour;
     }
+    free(parent);
     free(color);
     return false;
 }
@@ -607,29 +608,31 @@ bool has_path_DFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
 /*
 * Visit for the recursive method
 */
-bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, struct linkedlist *path){
+bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, int * parent, struct linkedlist *path){
     struct Neighbour *current, *next;
     int v;
     bool retour;
 
     color[node] = 1;
 
-    current = g->adjList[node-1].list;
-    next = g->adjList[node-1].list->nextNeighbour;
+    current = g->adjList[node].list;
+    next = g->adjList[node].list->nextNeighbour;
 
     while(current->neighbour != -1)
     {
-        v = current->neighbour+1;
+        v = current->neighbour;
 
-        if(v == nodeEnd)
-        {
-            linkedlist_add_back(path,v);
-            return true;
-        }
 
         if(color[v] == 0)
         {
-            retour = DFS_visit(g,nodeEnd,v,color,path);
+            parent[v] = node;
+
+            if(v == nodeEnd-1)
+            {
+                return true;
+            }
+
+            retour = DFS_visit(g,nodeEnd,v,color,parent,path);
             if(retour)
             {
                 return retour;

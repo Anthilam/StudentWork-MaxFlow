@@ -11,7 +11,7 @@
 
 int main() {
 	Graph g;
-	create_graph(&g, 6, true);
+	create_graph(&g, 5, true);
 	add_node(&g, 1);
 	add_node(&g, 2);
 	add_node(&g, 3);
@@ -59,6 +59,7 @@ int main() {
 	linkedlist_destroy(path);
 	linkedlist_destroy(path2);
 	free(path);
+	free(path2);
 
 	/*
 	bool was_created = false, isDirected, symmetric;

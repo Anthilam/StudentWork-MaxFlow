@@ -102,6 +102,6 @@ bool has_path_DFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
 /*
 * Visit for the recursive method
 */
-bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, struct linkedlist *path);
+bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, int * parent, struct linkedlist *path);
 
 #endif // GRAPH_H
