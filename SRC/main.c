@@ -18,14 +18,14 @@ int main() {
 	add_node(&g, 4);
 	add_node(&g, 5);
 
-	add_edge(&g,1,3,false,2);
+	add_edge(&g,1,3,false,3);
 	add_edge(&g,1,2,false,2);
-    add_edge(&g,1,1,false,2);
+    add_edge(&g,1,1,false,1);
 	add_edge(&g,3,5,false,1);
 
 
-	add_edge(&g,2,3,false,2);
-	add_edge(&g,2,1,false,2);
+	add_edge(&g,2,3,false,5);
+	add_edge(&g,2,1,false,1);
 	add_edge(&g,2,2,false,2);
 	add_edge(&g,3,5,false,1);
 
@@ -39,26 +39,17 @@ int main() {
 
 
 	view_graph(&g,stdout,false);
-	struct linkedlist *path = malloc(sizeof(struct linkedlist));
-	linkedlist_create(path);
 	struct linkedlist *path2 = malloc(sizeof(struct linkedlist));
 	linkedlist_create(path2);
 
-	bool test = has_path_BFS(&g,1,4, path);
-	bool test2 = has_path_DFS(&g,1,4,path2);
-	if(test){
-		printf("cébon c dedans lol\n");
-		linkedlist_dump(path);
-	}
+	bool test3 = FloydWarshall_visit(&g,1,4,path2);
 
-	if(test2){
+	if(test3){
 		printf("cébon c dedans 3 lol\n");
-		linkedlist_dump(path2);
 	}
 
-	linkedlist_destroy(path);
+	linkedlist_dump(path2);
 	linkedlist_destroy(path2);
-	free(path);
 	free(path2);
 
 	/*

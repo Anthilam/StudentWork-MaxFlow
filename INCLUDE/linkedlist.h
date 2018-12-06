@@ -68,12 +68,19 @@ bool linkedlist_is_empty(const struct linkedlist *self);
  */
 size_t linkedlist_size(const struct linkedlist *self);
 
-
 /*
  * Search for an element in the list.
  */
 size_t linkedlist_node_search(const struct list_node *self, int value);
 
+/*
+ * Transform the parent array to a path thanks to ending and starting node
+ */
+void linkedlist_parent_to_path(struct linkedlist *self, int * parent, int nodeStart, int nodeEnd);
+
+/*
+ * Search if a value is in the linked list
+ */
 size_t linkedlist_search(const struct linkedlist *self, int value);
 
 

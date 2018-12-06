@@ -527,6 +527,7 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
         u = linkedlist_get(queue, queueSize-1);
         if(u == nodeEnd)
         {
+            linkedlist_parent_to_path(path, parent, nodeStart-1, nodeEnd-1);
             linkedlist_destroy(queue);
             free(queue);
             free(color);
@@ -584,13 +585,16 @@ bool has_path_DFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
     while(current->neighbour != -1)
     {
         v = current->neighbour;
-        printf("%d - ",v);
         if(color[v] == 0)
         {
-            parent[v] = nodeStart;
+            parent[v] = nodeStart - 1;
             retour = DFS_visit(g,nodeEnd,v,color, parent, path);
             if(retour)
             {
+                for(int i = 0; i < g->nbMaxNodes; i++){
+                    printf("%d - > %d \n",i+1,parent[i]+1);
+                }
+                linkedlist_parent_to_path(path, parent, nodeStart-1, nodeEnd-1);
                 free(parent);
                 free(color);
                 return retour;
@@ -645,4 +649,105 @@ bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, int * parent, struc
     return false;
 }
 
+/*
+* Check if there is a path between two nodes with Floyd-Warshall
+*/
+bool FloydWarshall_visit(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path){
+    int **M = malloc(sizeof(int *) * g->nbMaxNodes);
+    int *prec = malloc(sizeof(int *) * g->nbMaxNodes);
+    bool ret = false;
+    struct Neighbour *current, *next;
 
+    for(int i = 0; i < g->nbMaxNodes; i++)
+    {
+        M[i] = malloc((sizeof(int) * g->nbMaxNodes));
+    }
+
+    for(int i = 0; i < g->nbMaxNodes; i++)
+    {
+        for(int j = 0; j < g->nbMaxNodes; j++)
+        {
+            M[i][j] = INT_MAX;
+        }
+    }
+
+
+    for(int i = 0; i < g->nbMaxNodes; i++)
+    {
+        current = g->adjList[i].list;
+        next = g->adjList[i].list->nextNeighbour;
+        while(current->neighbour != -1)
+        {
+            M[i][current->neighbour] = current->weight;
+            current = next;
+            next = current->nextNeighbour;
+        }
+
+    }
+
+
+    for(int z = 0; z < g->nbMaxNodes; z++)
+    {
+        for(int x = 0; x < g->nbMaxNodes; x++)
+        {
+            for(int y = 0; y < g->nbMaxNodes; y++)
+            {
+                if((M[x][z] != INT_MAX) && (M[z][y] != INT_MAX) && (M[x][z] + M[z][y] < M[x][y]))
+                {
+                    M[x][y] = M[x][z] + M[z][y];
+                    prec[x] = z;
+                    prec[y] = z;
+                }
+            }
+        }
+    }
+    for (int j = 0; j < g->nbMaxNodes; ++j)
+    {
+        printf("%d -> %d\n",j+1,prec[j]+1);
+    }
+
+    if(test_prec_path_visit(nodeStart-1,nodeEnd-1,prec,g->nbMaxNodes))
+    {
+        ret = true;
+    }
+
+
+    for(int i = 0; i < g->nbMaxNodes; i++)
+    {
+        free(M[i]);
+    }
+    linkedlist_parent_to_path(path, prec, nodeStart-1, nodeEnd-1);
+    free(M);
+    free(prec);
+    return ret;
+
+}
+
+/*
+* Check if there is a path between two nodes int the predecessor array
+*/
+bool test_prec_path_visit(int nodeStart, int nodeEnd, int * prec, int nbMaxNode){
+    int * visited = malloc(sizeof(int) * nbMaxNode);
+    for(int i = 0; i < nbMaxNode; i++){
+        visited[i] = 0;
+    }
+
+    visited[nodeEnd] = 1;
+
+    int i = prec[nodeEnd];
+
+
+    while(i != nodeStart && visited[i] == 0)
+    {
+        visited[i] = 1;
+        i = prec[i];
+        if(i == nodeStart)
+        {
+            free(visited);
+            return true;
+        }
+    }
+
+    free(visited);
+    return false;
+}

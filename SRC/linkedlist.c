@@ -44,7 +44,7 @@ void linkedlist_destroy(struct linkedlist *self) {
  */
 void linkedlist_node_dump(struct list_node *self) {
     if (self != NULL) {
-        printf("%d ", self->value);
+        printf("%d ", self->value+1);
         if (self->next != NULL) {
             linkedlist_node_dump(self->next);
         }
@@ -174,3 +174,17 @@ size_t linkedlist_search(const struct linkedlist *self, int value) {
 }
 
 
+/*
+ * Transform the parent array to a path thanks to ending and starting node
+ */
+void linkedlist_parent_to_path(struct linkedlist *self, int * parent, int nodeStart, int nodeEnd){
+
+    linkedlist_add_front(self,nodeEnd);
+    int i = parent[nodeEnd];
+
+    while(i != nodeStart){
+        linkedlist_add_front(self,i);
+        i = parent[i];
+    }
+    linkedlist_add_front(self,nodeStart);
+}
