@@ -21,6 +21,7 @@
 typedef struct Neighbour {
 	int neighbour;
 	int weight;
+	int weightResidual;
 	struct Neighbour *nextNeighbour;
 } Neighbour;
 

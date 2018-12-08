@@ -16,6 +16,7 @@ void neighbour_create(Neighbour *self, int neighbour, int weight)
 {
 	self->neighbour = neighbour;
 	self->weight = weight;
+	self->weightResidual = weight;
 	self->nextNeighbour = NULL;
 }
 
@@ -101,12 +102,12 @@ void neighbour_dump(Neighbour *self, FILE *out)
 	{
 		if (self->neighbour >= 0)
 		{
-			fprintf(out, "(%d/%d)", self->neighbour+1, self->weight);
+			fprintf(out, "(%d/%d)", self->neighbour+1, self->weightResidual);
 		}
 		// If it's a negative neighbour
 		else
 		{
-			fprintf(out, "(%d/%d)", self->neighbour, self->weight);
+			fprintf(out, "(%d/%d)", self->neighbour, self->weightResidual);
 		}
 	}
 }

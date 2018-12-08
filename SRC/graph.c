@@ -652,7 +652,7 @@ bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, int * parent, struc
 /*
 * Check if there is a path between two nodes with Floyd-Warshall
 */
-bool FloydWarshall_visit(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path){
+bool FloydWarshall_visit(Graph *g, int nodeEnd, int nodeStart, struct linkedlist *path){
     int **M = malloc(sizeof(int *) * g->nbMaxNodes);
     int *prec = malloc(sizeof(int *) * g->nbMaxNodes);
     bool ret = false;
@@ -750,4 +750,208 @@ bool test_prec_path_visit(int nodeStart, int nodeEnd, int * prec, int nbMaxNode)
 
     free(visited);
     return false;
+}
+
+int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
+{
+	// Init flow
+	int flow = 0;
+
+	// Init flow matrix
+	int **flowMatrix = malloc(sizeof(int *) * g->nbMaxNodes);
+	for (int i = 0; i < g->nbMaxNodes; i++)
+	{
+		flowMatrix[i] = malloc(sizeof(int) * g->nbMaxNodes);
+		for (int j = 0; j < g->nbMaxNodes; j++)
+		{
+			flowMatrix[i][j] = 0;
+		}
+	}
+
+	// Init path list
+	linkedlist *path = malloc(sizeof(linkedlist));
+	linkedlist_create(path);
+
+	// Copy the graph
+	Graph g_residual;
+	create_graph(&g_residual, g->nbMaxNodes, g->isDirected);
+	for (int i = 1; i <= g->nbMaxNodes; i++)
+	{
+		add_node(&g_residual, i);
+	}
+
+	for (int i = 0; i < g->nbMaxNodes; i++)
+	{
+		Neighbour *node = g->adjList[i].list;
+		while (node != NULL)
+		{
+			if (node->neighbour != -1)
+			{
+				add_edge(&g_residual, i+1, node->neighbour+1, false, node->weight);
+			}
+
+			node = node->nextNeighbour;
+		}
+	}
+
+	view_graph(&g_residual, stdout, false);
+
+	// Compute path
+	bool has_path = has_path_DFS(&g_residual, nodeStart, nodeEnd, path);
+
+	while (has_path)
+	{
+		printf("PATH:");
+		linkedlist_dump(path);
+
+		// Check that residual capacity is > 0
+		int min_residual_capacity = INT_MAX;
+		bool residual_capacity_ok = compute_residual_capacity(&g_residual, path, flowMatrix, &min_residual_capacity);
+
+		// Update flow matrix
+		update_flow_matrix(&g_residual, path, flowMatrix, &min_residual_capacity);
+
+		// Update the residual graph
+		struct list_node *l = path->first;
+		if (l == NULL)
+		{
+			exit(1);
+		}
+
+		while (l->next != NULL)
+		{
+			// Get the proper edge
+			Neighbour *node = g_residual.adjList[l->value].list;
+
+			if (node != NULL)
+			{
+				while (node->neighbour != l->next->value && node->nextNeighbour != NULL)
+				{
+					node = node->nextNeighbour;
+				}
+
+				int capacity = node->weight - flowMatrix[l->value][l->next->value];
+				if (capacity > 0)
+				{
+					node->weightResidual = capacity;
+					add_edge(&g_residual, l->next->value+1, l->value+1, false, -flowMatrix[l->next->value][l->value]);
+				}
+				else
+				{
+					remove_edge(&g_residual, l->value+1, l->next->value+1);
+					add_edge(&g_residual, l->next->value+1, l->value+1, false, -flowMatrix[l->next->value][l->value]);
+				}
+			}
+
+			l = l->next;
+		}
+
+		view_graph(&g_residual, stdout, false);
+
+		printf("resisudal_capacity_ok : %d\n", residual_capacity_ok);
+		printf("min_residual_capacity : %d\n", min_residual_capacity);
+		dump_flow_matrix(flowMatrix, g->nbMaxNodes);
+
+		has_path = has_path_DFS(&g_residual, nodeStart, nodeEnd, path);
+	}
+
+	// Memory cleanup
+	linkedlist_destroy(path);
+	free(path);
+	for (int i = 0; i < g->nbMaxNodes; i++)
+	{
+		free(flowMatrix[i]);
+	}
+	free(flowMatrix);
+	destroy_graph(&g_residual);
+
+	return flow;
+}
+
+bool compute_residual_capacity(Graph *g, linkedlist *path, int **flowMatrix, int *min_residual_capacity)
+{
+	struct list_node *l = path->first;
+	int capacity;
+
+	if (l == NULL)
+	{
+		return false;
+	}
+
+	// Loop path
+	while (l->next != NULL)
+	{
+		// Get the proper edge
+		Neighbour *node = g->adjList[l->value].list;
+		if (node != NULL)
+		{
+			while (node->neighbour != l->next->value && node->nextNeighbour != NULL)
+			{
+				node = node->nextNeighbour;
+			}
+
+			// Compute residual capacity of the current edge, if <= 0, no more flow can go through so return false
+			capacity = node->weight - flowMatrix[l->value][l->next->value];
+			if (capacity <= 0)
+			{
+				return false;
+			}
+
+			// If computed capacity is smaller than the last computed capacity
+			if (capacity < *min_residual_capacity)
+			{
+				*min_residual_capacity = capacity;
+			}
+
+		}
+
+		l = l->next;
+	}
+
+	return true;
+}
+
+void update_flow_matrix(Graph *g, linkedlist *path, int **flowMatrix, int *min_residual_capacity)
+{
+	struct list_node *l = path->first;
+
+	if (l == NULL)
+	{
+		return;
+	}
+
+	// Loop path
+	while (l->next != NULL)
+	{
+		// Get the proper edge
+		Neighbour *node = g->adjList[l->value].list;
+		if (node != NULL)
+		{
+			while (node->neighbour != l->next->value && node->nextNeighbour != NULL)
+			{
+				node = node->nextNeighbour;
+			}
+
+			// Send flow along the path
+			flowMatrix[l->value][l->next->value] = flowMatrix[l->value][l->next->value] + *min_residual_capacity;
+
+			// The flow might be return later
+			flowMatrix[l->next->value][l->value] = flowMatrix[l->next->value][l->value] - *min_residual_capacity;
+		}
+
+		l = l->next;
+	}
+}
+
+void dump_flow_matrix(int **flowMatrix, int size)
+{
+	printf("flowMatrix :\n");
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			printf("[%d]", flowMatrix[i][j]);
+		}
+		printf("\n");
+	}
 }

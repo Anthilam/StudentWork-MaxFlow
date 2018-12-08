@@ -11,46 +11,28 @@
 
 int main() {
 	Graph g;
-	create_graph(&g, 5, true);
+	create_graph(&g, 6, true);
 	add_node(&g, 1);
 	add_node(&g, 2);
 	add_node(&g, 3);
 	add_node(&g, 4);
 	add_node(&g, 5);
+	add_node(&g, 6);
 
-	add_edge(&g,1,3,false,3);
-	add_edge(&g,1,2,false,2);
-    add_edge(&g,1,1,false,1);
-	add_edge(&g,3,5,false,1);
-
-
-	add_edge(&g,2,3,false,5);
-	add_edge(&g,2,1,false,1);
-	add_edge(&g,2,2,false,2);
-	add_edge(&g,3,5,false,1);
-
-
-
-	add_edge(&g,3,4,false,1);
-	add_edge(&g,3,1,false,1);
-	add_edge(&g,3,2,false,1);
-	add_edge(&g,3,3,false,1);
-	add_edge(&g,3,5,false,1);
-
+	add_edge(&g,1,2,false,16);
+	add_edge(&g,1,3,false,13);
+    add_edge(&g,2,3,false,10);
+	add_edge(&g,3,2,false,4);
+	add_edge(&g,2,4,false,12);
+	add_edge(&g,3,5,false,14);
+	add_edge(&g,4,3,false,9);
+	add_edge(&g,5,4,false,7);
+	add_edge(&g,4,6,false,20);
+	add_edge(&g,5,6,false,4);
 
 	view_graph(&g,stdout,false);
-	struct linkedlist *path2 = malloc(sizeof(struct linkedlist));
-	linkedlist_create(path2);
 
-	bool test3 = FloydWarshall_visit(&g,1,4,path2);
-
-	if(test3){
-		printf("cébon c dedans 3 lol\n");
-	}
-
-	linkedlist_dump(path2);
-	linkedlist_destroy(path2);
-	free(path2);
+	ford_felkurson_algorithm(&g, 1, 6);
 
 	/*
 	bool was_created = false, isDirected, symmetric;

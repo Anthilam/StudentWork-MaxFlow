@@ -8,12 +8,14 @@
 #ifndef GRAPH_LINKEDLIST_H
 #define GRAPH_LINKEDLIST_H
 
-
-struct list_node;
+struct list_node {
+    int value;
+    struct list_node *next;
+};
 
 typedef struct linkedlist {
     struct list_node *first;
-};
+} linkedlist;
 
 /*
  * Create an empty list
