@@ -83,6 +83,7 @@ void neighbour_remove(Neighbour *self, int nbNode)
 			Neighbour *next = self->nextNeighbour;
 
 			self->weight = next->weight;
+			self->weightResidual = next->weightResidual;
 			self->neighbour = next->neighbour;
 			self->nextNeighbour = next->nextNeighbour;
 

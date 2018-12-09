@@ -247,43 +247,12 @@ void remove_edge(Graph *g, int nodeStart, int nodeEnd)
   {
     printf("\tRemoving node from list %d\n", realNodeStart);
 
-	if (g->adjList[realNodeStart].list->neighbour >= 0)
-	{
-		if (g->adjList[realNodeStart].list->neighbour == realNodeEnd)
-		{
-			Neighbour *next = g->adjList[realNodeStart].list->nextNeighbour;
-
-			g->adjList[realNodeStart].list->weight = next->weight;
-			g->adjList[realNodeStart].list->neighbour = next->neighbour;
-			g->adjList[realNodeStart].list->nextNeighbour = next->nextNeighbour;
-
-			free(next);
-		}
-		else {
-			neighbour_remove(g->adjList[realNodeStart].list->nextNeighbour, realNodeEnd);
-		}
-	}
+	neighbour_remove(g->adjList[realNodeStart].list, realNodeEnd);
 
     if (!g->isDirected)
     {
       printf("\tRemoving node from list %d\n", realNodeEnd);
-
-	  if (g->adjList[realNodeEnd].list->neighbour >= 0)
-	  {
-		  if (g->adjList[realNodeEnd].list->neighbour == realNodeStart)
-		  {
-			 Neighbour *next = g->adjList[realNodeStart].list->nextNeighbour;
-
-  			g->adjList[realNodeEnd].list->weight = next->weight;
-  			g->adjList[realNodeEnd].list->neighbour = next->neighbour;
-  			g->adjList[realNodeEnd].list->nextNeighbour = next->nextNeighbour;
-
-  			free(next);
-		  }
-		  else {
-			  neighbour_remove(g->adjList[realNodeEnd].list->nextNeighbour, realNodeStart);
-		  }
-	  }
+	  neighbour_remove(g->adjList[realNodeEnd].list, realNodeStart);
     }
 
     printf("\tEdge between %d and %d removed!\n", nodeStart, nodeEnd);
@@ -837,7 +806,7 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 	{
 		printf("\nPATH:");
 		linkedlist_dump(path);
-		printf("\nLASTPATH");
+		printf("\nLASTPATH:");
 		linkedlist_dump(lastpath);
 
 		if (same_path(path, lastpath))
@@ -850,22 +819,25 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 		bool residual_capacity_ok = compute_residual_capacity(&g_residual, path, flowMatrix, &min_residual_capacity);
 
 		printf("residual_capacity_ok : %d\n", residual_capacity_ok);
+		printf("min_residual_capacity : %d\n", min_residual_capacity);
 
 		if (residual_capacity_ok)
 		{
 			// Update flow matrix
 			update_flow_matrix(&g_residual, path, flowMatrix, &min_residual_capacity);
 
-			// Update the residual graph
 			struct list_node *l = path->first;
 			if (l == NULL)
 			{
 				exit(1);
 			}
 
+			// Update the residual graph
 			while (l->next != NULL)
 			{
 				Neighbour *node = g_residual.adjList[l->value].list;
+				Neighbour *node2 = g_residual.adjList[l->next->value].list;
+
 				while (node != NULL)
 				{
 					if (node->neighbour == l->next->value)
@@ -884,14 +856,14 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 					node = node->nextNeighbour;
 				}
 
-				Neighbour *node2 = g_residual.adjList[l->next->value].list;
 				int value = 0;
+				bool notbreak = true;
 				while (node2 != NULL)
 				{
 					if (node2->neighbour == l->value)
 					{
-						value = node2->weightResidual + min_residual_capacity;
-						remove_edge(&g_residual, l->next->value+1, l->value+1);
+						node2->weightResidual += -flowMatrix[l->next->value][l->value];
+						notbreak = false;
 						break;
 					}
 					else
@@ -902,14 +874,15 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 					node2 = node2->nextNeighbour;
 				}
 
-				add_edge(&g_residual, l->next->value+1, l->value+1, false, value);
+				if (notbreak) {
+					// add_edge(&g_residual, l->next->value+1, l->value+1, value);
+				}
 
 				l = l->next;
 			}
 
 			view_graph(&g_residual, stdout, false);
 
-			printf("min_residual_capacity : %d\n", min_residual_capacity);
 			dump_flow_matrix(flowMatrix, g->nbMaxNodes);
 		}
 
@@ -928,6 +901,16 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 
 		//has_path = false;
 		has_path = has_path_DFS(&g_residual, nodeStart, nodeEnd, path);
+	}
+
+	Neighbour *node = g->adjList[nodeStart-1].list;
+	while (node != NULL)
+	{
+		if (node->neighbour >= 0)
+		{
+			flow += flowMatrix[nodeStart-1][node->neighbour];
+		}
+		node = node->nextNeighbour;
 	}
 
 	// Memory cleanup
@@ -1009,7 +992,14 @@ void update_flow_matrix(Graph *g, linkedlist *path, int **flowMatrix, int *min_r
 				flowMatrix[l->value][l->next->value] += *min_residual_capacity;
 
 				// The flow might be return later
-				flowMatrix[l->next->value][l->value] -= *min_residual_capacity;
+				if (flowMatrix[l->next->value][l->value] < *min_residual_capacity)
+				{
+					flowMatrix[l->next->value][l->value] = -*min_residual_capacity;
+				}
+				else
+				{
+					flowMatrix[l->next->value][l->value] -= *min_residual_capacity;
+				}
 			}
 
 			node = node->nextNeighbour;

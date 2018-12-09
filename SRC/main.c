@@ -32,7 +32,7 @@ int main() {
 
 	view_graph(&g,stdout,false);
 
-	ford_felkurson_algorithm(&g, 1, 6);
+	printf("\n\nFord Felkurson result: %d\n", ford_felkurson_algorithm(&g, 1, 6));
 
 	/*
 	bool was_created = false, isDirected, symmetric;
