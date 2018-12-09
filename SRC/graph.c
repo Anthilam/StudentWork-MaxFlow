@@ -246,12 +246,44 @@ void remove_edge(Graph *g, int nodeStart, int nodeEnd)
   else
   {
     printf("\tRemoving node from list %d\n", realNodeStart);
-    neighbour_remove(g->adjList[realNodeStart].list, realNodeEnd);
+
+	if (g->adjList[realNodeStart].list->neighbour >= 0)
+	{
+		if (g->adjList[realNodeStart].list->neighbour == realNodeEnd)
+		{
+			Neighbour *next = g->adjList[realNodeStart].list->nextNeighbour;
+
+			g->adjList[realNodeStart].list->weight = next->weight;
+			g->adjList[realNodeStart].list->neighbour = next->neighbour;
+			g->adjList[realNodeStart].list->nextNeighbour = next->nextNeighbour;
+
+			free(next);
+		}
+		else {
+			neighbour_remove(g->adjList[realNodeStart].list->nextNeighbour, realNodeEnd);
+		}
+	}
 
     if (!g->isDirected)
     {
       printf("\tRemoving node from list %d\n", realNodeEnd);
-      neighbour_remove(g->adjList[realNodeEnd].list, realNodeStart);
+
+	  if (g->adjList[realNodeEnd].list->neighbour >= 0)
+	  {
+		  if (g->adjList[realNodeEnd].list->neighbour == realNodeStart)
+		  {
+			 Neighbour *next = g->adjList[realNodeStart].list->nextNeighbour;
+
+  			g->adjList[realNodeEnd].list->weight = next->weight;
+  			g->adjList[realNodeEnd].list->neighbour = next->neighbour;
+  			g->adjList[realNodeEnd].list->nextNeighbour = next->nextNeighbour;
+
+  			free(next);
+		  }
+		  else {
+			  neighbour_remove(g->adjList[realNodeEnd].list->nextNeighbour, realNodeStart);
+		  }
+	  }
     }
 
     printf("\tEdge between %d and %d removed!\n", nodeStart, nodeEnd);
@@ -771,6 +803,8 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 	// Init path list
 	linkedlist *path = malloc(sizeof(linkedlist));
 	linkedlist_create(path);
+	linkedlist *lastpath = malloc(sizeof(linkedlist));
+	linkedlist_create(lastpath);
 
 	// Copy the graph
 	Graph g_residual;
@@ -801,63 +835,106 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 
 	while (has_path)
 	{
-		printf("PATH:");
+		printf("\nPATH:");
 		linkedlist_dump(path);
+		printf("\nLASTPATH");
+		linkedlist_dump(lastpath);
+
+		if (same_path(path, lastpath))
+		{
+			break;
+		}
 
 		// Check that residual capacity is > 0
 		int min_residual_capacity = INT_MAX;
 		bool residual_capacity_ok = compute_residual_capacity(&g_residual, path, flowMatrix, &min_residual_capacity);
 
-		// Update flow matrix
-		update_flow_matrix(&g_residual, path, flowMatrix, &min_residual_capacity);
+		printf("residual_capacity_ok : %d\n", residual_capacity_ok);
 
-		// Update the residual graph
-		struct list_node *l = path->first;
-		if (l == NULL)
+		if (residual_capacity_ok)
 		{
-			exit(1);
-		}
+			// Update flow matrix
+			update_flow_matrix(&g_residual, path, flowMatrix, &min_residual_capacity);
 
-		while (l->next != NULL)
-		{
-			// Get the proper edge
-			Neighbour *node = g_residual.adjList[l->value].list;
-
-			if (node != NULL)
+			// Update the residual graph
+			struct list_node *l = path->first;
+			if (l == NULL)
 			{
-				while (node->neighbour != l->next->value && node->nextNeighbour != NULL)
+				exit(1);
+			}
+
+			while (l->next != NULL)
+			{
+				Neighbour *node = g_residual.adjList[l->value].list;
+				while (node != NULL)
 				{
+					if (node->neighbour == l->next->value)
+					{
+						int capacity = node->weight - flowMatrix[l->value][l->next->value];
+						if (capacity > 0)
+						{
+							node->weightResidual = capacity;
+						}
+						else
+						{
+							remove_edge(&g_residual, l->value+1, l->next->value+1);
+						}
+					}
+
 					node = node->nextNeighbour;
 				}
 
-				int capacity = node->weight - flowMatrix[l->value][l->next->value];
-				if (capacity > 0)
+				Neighbour *node2 = g_residual.adjList[l->next->value].list;
+				int value = 0;
+				while (node2 != NULL)
 				{
-					node->weightResidual = capacity;
-					add_edge(&g_residual, l->next->value+1, l->value+1, false, -flowMatrix[l->next->value][l->value]);
+					if (node2->neighbour == l->value)
+					{
+						value = node2->weightResidual + min_residual_capacity;
+						remove_edge(&g_residual, l->next->value+1, l->value+1);
+						break;
+					}
+					else
+					{
+						value = -flowMatrix[l->next->value][l->value];
+					}
+
+					node2 = node2->nextNeighbour;
 				}
-				else
-				{
-					remove_edge(&g_residual, l->value+1, l->next->value+1);
-					add_edge(&g_residual, l->next->value+1, l->value+1, false, -flowMatrix[l->next->value][l->value]);
-				}
+
+				add_edge(&g_residual, l->next->value+1, l->value+1, false, value);
+
+				l = l->next;
 			}
 
-			l = l->next;
+			view_graph(&g_residual, stdout, false);
+
+			printf("min_residual_capacity : %d\n", min_residual_capacity);
+			dump_flow_matrix(flowMatrix, g->nbMaxNodes);
 		}
 
-		view_graph(&g_residual, stdout, false);
+		linkedlist_destroy(lastpath);
+		linkedlist_create(lastpath);
 
-		printf("resisudal_capacity_ok : %d\n", residual_capacity_ok);
-		printf("min_residual_capacity : %d\n", min_residual_capacity);
-		dump_flow_matrix(flowMatrix, g->nbMaxNodes);
+		struct list_node *cp = path->first;
+		while (cp != NULL)
+		{
+			linkedlist_add_back(lastpath, cp->value);
+			cp = cp->next;
+		}
 
+		linkedlist_destroy(path);
+		linkedlist_create(path);
+
+		//has_path = false;
 		has_path = has_path_DFS(&g_residual, nodeStart, nodeEnd, path);
 	}
 
 	// Memory cleanup
 	linkedlist_destroy(path);
+	linkedlist_destroy(lastpath);
 	free(path);
+	free(lastpath);
 	for (int i = 0; i < g->nbMaxNodes; i++)
 	{
 		free(flowMatrix[i]);
@@ -883,26 +960,25 @@ bool compute_residual_capacity(Graph *g, linkedlist *path, int **flowMatrix, int
 	{
 		// Get the proper edge
 		Neighbour *node = g->adjList[l->value].list;
-		if (node != NULL)
+		while (node != NULL)
 		{
-			while (node->neighbour != l->next->value && node->nextNeighbour != NULL)
+			if (node->neighbour == l->next->value)
 			{
-				node = node->nextNeighbour;
+				// Compute residual capacity of the current edge, if <= 0, no more flow can go through so return false
+				capacity = node->weight - flowMatrix[l->value][l->next->value];
+				if (capacity <= 0)
+				{
+					return false;
+				}
+
+				// If computed capacity is smaller than the last computed capacity
+				if (capacity < *min_residual_capacity)
+				{
+					*min_residual_capacity = capacity;
+				}
 			}
 
-			// Compute residual capacity of the current edge, if <= 0, no more flow can go through so return false
-			capacity = node->weight - flowMatrix[l->value][l->next->value];
-			if (capacity <= 0)
-			{
-				return false;
-			}
-
-			// If computed capacity is smaller than the last computed capacity
-			if (capacity < *min_residual_capacity)
-			{
-				*min_residual_capacity = capacity;
-			}
-
+			node = node->nextNeighbour;
 		}
 
 		l = l->next;
@@ -925,18 +1001,18 @@ void update_flow_matrix(Graph *g, linkedlist *path, int **flowMatrix, int *min_r
 	{
 		// Get the proper edge
 		Neighbour *node = g->adjList[l->value].list;
-		if (node != NULL)
+		while (node != NULL)
 		{
-			while (node->neighbour != l->next->value && node->nextNeighbour != NULL)
+			if (node->neighbour == l->next->value)
 			{
-				node = node->nextNeighbour;
+				// Send flow along the path
+				flowMatrix[l->value][l->next->value] += *min_residual_capacity;
+
+				// The flow might be return later
+				flowMatrix[l->next->value][l->value] -= *min_residual_capacity;
 			}
 
-			// Send flow along the path
-			flowMatrix[l->value][l->next->value] = flowMatrix[l->value][l->next->value] + *min_residual_capacity;
-
-			// The flow might be return later
-			flowMatrix[l->next->value][l->value] = flowMatrix[l->next->value][l->value] - *min_residual_capacity;
+			node = node->nextNeighbour;
 		}
 
 		l = l->next;
@@ -953,5 +1029,32 @@ void dump_flow_matrix(int **flowMatrix, int size)
 			printf("[%d]", flowMatrix[i][j]);
 		}
 		printf("\n");
+	}
+}
+
+bool same_path(linkedlist *path, linkedlist *lastpath)
+{
+	struct list_node *a = path->first;
+	struct list_node *b = lastpath->first;
+
+	while (true)
+	{
+		if (a == NULL && b == NULL)
+		{
+			return true;
+		}
+
+		if ((a == NULL && b != NULL) || (a != NULL && b == NULL))
+		{
+			return false;
+		}
+
+		if (a->value != b->value)
+		{
+			return false;
+		}
+
+		a = a->next;
+		b = b->next;
 	}
 }

@@ -124,4 +124,6 @@ void update_flow_matrix(Graph *g, linkedlist *path, int **flowMatrix, int *min_r
 
 void dump_flow_matrix(int **flowMatrix, int size);
 
+bool same_path(linkedlist *path, linkedlist *lastpath);
+
 #endif // GRAPH_H

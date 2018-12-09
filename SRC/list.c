@@ -78,17 +78,19 @@ void neighbour_remove(Neighbour *self, int nbNode)
 {
 	if (self->neighbour >= 0)
 	{
-		Neighbour *next = self->nextNeighbour;
-
 		if (self->neighbour == nbNode)
 		{
-			self->nextNeighbour = next->nextNeighbour;
-			self->neighbour = next->neighbour;
+			Neighbour *next = self->nextNeighbour;
+
 			self->weight = next->weight;
+			self->neighbour = next->neighbour;
+			self->nextNeighbour = next->nextNeighbour;
+
 			free(next);
 		}
-		else {
-			neighbour_remove(next, nbNode);
+		else
+		{
+			neighbour_remove(self->nextNeighbour, nbNode);
 		}
 	}
 }
