@@ -650,19 +650,19 @@ bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, int * parent, struc
     }
     return false;
 }
-
 /*
 * Check if there is a path between two nodes with Floyd-Warshall
 */
-bool FloydWarshall_visit(Graph *g, int nodeEnd, int nodeStart, struct linkedlist *path){
+bool FloydWarshall_visit(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path){
     int **M = malloc(sizeof(int *) * g->nbMaxNodes);
-    int *prec = malloc(sizeof(int *) * g->nbMaxNodes);
+    int **prec = malloc(sizeof(int *) * g->nbMaxNodes);
     bool ret = false;
     struct Neighbour *current, *next;
 
     for(int i = 0; i < g->nbMaxNodes; i++)
     {
         M[i] = malloc((sizeof(int) * g->nbMaxNodes));
+        prec[i] = malloc((sizeof(int) * g->nbMaxNodes));
     }
 
     for(int i = 0; i < g->nbMaxNodes; i++)
@@ -670,6 +670,7 @@ bool FloydWarshall_visit(Graph *g, int nodeEnd, int nodeStart, struct linkedlist
         for(int j = 0; j < g->nbMaxNodes; j++)
         {
             M[i][j] = INT_MAX;
+            prec[i][j] = (i!=j)?j:-1;
         }
     }
 
@@ -697,28 +698,30 @@ bool FloydWarshall_visit(Graph *g, int nodeEnd, int nodeStart, struct linkedlist
                 if((M[x][z] != INT_MAX) && (M[z][y] != INT_MAX) && (M[x][z] + M[z][y] < M[x][y]))
                 {
                     M[x][y] = M[x][z] + M[z][y];
-                    prec[x] = z;
-                    prec[y] = z;
+                    prec[x][y] = prec[x][z];
                 }
             }
         }
     }
-    for (int j = 0; j < g->nbMaxNodes; ++j)
-    {
-        printf("%d -> %d\n",j+1,prec[j]+1);
-    }
 
-    if(test_prec_path_visit(nodeStart-1,nodeEnd-1,prec,g->nbMaxNodes))
-    {
-        ret = true;
-    }
 
+    if(M[nodeStart-1][nodeEnd-1] == INT_MAX)
+    {
+        ret = false;
+    }else{
+        int k = nodeStart-1;
+        do{
+            linkedlist_add_back(path,k);
+            k = prec[k][nodeEnd-1];
+        }while(k != nodeEnd-1);
+        linkedlist_add_back(path,k);
+    }
 
     for(int i = 0; i < g->nbMaxNodes; i++)
     {
         free(M[i]);
+        free(prec[i]);
     }
-    linkedlist_parent_to_path(path, prec, nodeStart-1, nodeEnd-1);
     free(M);
     free(prec);
     return ret;

@@ -36,7 +36,7 @@ int main() {
 
 	printf("\n\nFord Felkurson result: %d\n", ford_felkurson_algorithm(&g, 1, 6));
 
-    printf("\n\nBFS result: %d\n", has_path_BFS(&g,1,6,path));
+    printf("\n\nBFS result: %d\n", FloydWarshall_visit(&g,1,6,path));
     linkedlist_dump(path);
     linkedlist_destroy(path);
 

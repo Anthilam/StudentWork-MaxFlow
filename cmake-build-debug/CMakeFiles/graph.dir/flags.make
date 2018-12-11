@@ -6,5 +6,5 @@ C_FLAGS = -g
 
 C_DEFINES = 
 
-C_INCLUDES = -I/home/barbeaut/Bureau/projet/graph/INCLUDE 
+C_INCLUDES = -I/home/barbeaut/Bureau/projet/graph/graph/INCLUDE 
 

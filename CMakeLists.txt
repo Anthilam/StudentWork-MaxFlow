@@ -7,10 +7,12 @@ include_directories(INCLUDE)
 
 add_executable(graph
         INCLUDE/graph.h
+        INCLUDE/linkedlist.h
         INCLUDE/list.h
         INCLUDE/main.h
         SRC/graph.c
+        SRC/linkedlist.c
         SRC/list.c
         SRC/main.c
         Makefile
-        README.md SRC/linkedlist.c INCLUDE/linkedlist.h)
+        README.md)

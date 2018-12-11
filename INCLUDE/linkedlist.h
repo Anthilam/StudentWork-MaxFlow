@@ -44,6 +44,11 @@ void linkedlist_node_add_back(struct list_node *self, int value);
 
 void linkedlist_add_back(struct linkedlist *self, int value);
 
+/*
+ * Add an element in the linkedlist at the beginning
+ */
+void linkedlist_add_front(struct linkedlist *self, int value);
+
 
 /*
  * Insert an element in the linkedlist (preserving the order)

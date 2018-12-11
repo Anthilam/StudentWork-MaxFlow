@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/graph.dir/SRC/graph.c.o"
+  "CMakeFiles/graph.dir/SRC/linkedlist.c.o"
   "CMakeFiles/graph.dir/SRC/list.c.o"
   "CMakeFiles/graph.dir/SRC/main.c.o"
-  "CMakeFiles/graph.dir/SRC/linkedlist.c.o"
   "graph.pdb"
   "graph"
 )
