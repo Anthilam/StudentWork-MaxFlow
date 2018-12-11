@@ -499,6 +499,7 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
 {
     if(nodeStart == nodeEnd)
     {
+        linkedlist_add_back(path,nodeStart);
         return true;
     }
     size_t queueSize;
@@ -526,7 +527,7 @@ bool has_path_BFS(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path)
     {
         queueSize = linkedlist_size(queue);
         u = linkedlist_get(queue, queueSize-1);
-        if(u == nodeEnd)
+        if(u == nodeEnd-1)
         {
             linkedlist_parent_to_path(path, parent, nodeStart-1, nodeEnd-1);
             linkedlist_destroy(queue);
