@@ -31,8 +31,14 @@ int main() {
 	add_edge(&g,5,6,false,4);
 
 	view_graph(&g,stdout,false);
+    struct linkedlist * path = malloc(sizeof(struct linkedlist));
+    linkedlist_create(path);
 
 	printf("\n\nFord Felkurson result: %d\n", ford_felkurson_algorithm(&g, 1, 6));
+
+    printf("\n\nBFS result: %d\n", has_path_BFS(&g,1,6,path));
+    linkedlist_dump(path);
+    linkedlist_destroy(path);
 
 	/*
 	bool was_created = false, isDirected, symmetric;
