@@ -653,7 +653,7 @@ bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, int * parent, struc
 /*
 * Check if there is a path between two nodes with Floyd-Warshall
 */
-bool FloydWarshall_visit(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path){
+bool has_path_FloydWarshall(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path){
     int **M = malloc(sizeof(int *) * g->nbMaxNodes);
     int **prec = malloc(sizeof(int *) * g->nbMaxNodes);
     bool ret = false;
@@ -726,35 +726,6 @@ bool FloydWarshall_visit(Graph *g, int nodeStart, int nodeEnd, struct linkedlist
     free(prec);
     return ret;
 
-}
-
-/*
-* Check if there is a path between two nodes int the predecessor array
-*/
-bool test_prec_path_visit(int nodeStart, int nodeEnd, int * prec, int nbMaxNode){
-    int * visited = malloc(sizeof(int) * nbMaxNode);
-    for(int i = 0; i < nbMaxNode; i++){
-        visited[i] = 0;
-    }
-
-    visited[nodeEnd] = 1;
-
-    int i = prec[nodeEnd];
-
-
-    while(i != nodeStart && visited[i] == 0)
-    {
-        visited[i] = 1;
-        i = prec[i];
-        if(i == nodeStart)
-        {
-            free(visited);
-            return true;
-        }
-    }
-
-    free(visited);
-    return false;
 }
 
 int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)

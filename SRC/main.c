@@ -10,44 +10,15 @@
 #include "main.h"
 
 int main() {
-	Graph g;
-	create_graph(&g, 6, true);
-	add_node(&g, 1);
-	add_node(&g, 2);
-	add_node(&g, 3);
-	add_node(&g, 4);
-	add_node(&g, 5);
-	add_node(&g, 6);
 
-	add_edge(&g,1,2,false,16);
-	add_edge(&g,1,3,false,13);
-    add_edge(&g,2,3,false,10);
-	add_edge(&g,3,2,false,4);
-	add_edge(&g,2,4,false,12);
-	add_edge(&g,3,5,false,14);
-	add_edge(&g,4,3,false,9);
-	add_edge(&g,5,4,false,7);
-	add_edge(&g,4,6,false,20);
-	add_edge(&g,5,6,false,4);
-
-	view_graph(&g,stdout,false);
-    struct linkedlist * path = malloc(sizeof(struct linkedlist));
-    linkedlist_create(path);
-
-	printf("\n\nFord Felkurson result: %d\n", ford_felkurson_algorithm(&g, 1, 6));
-
-    printf("\n\nBFS result: %d\n", FloydWarshall_visit(&g,1,6,path));
-    linkedlist_dump(path);
-    linkedlist_destroy(path);
-
-	/*
+    Graph g;
 	bool was_created = false, isDirected, symmetric;
 	char *string = malloc(sizeof(char *));
 	char *string2 = malloc(sizeof(char *));
-	int res = 0, res2 = 0, cmp = 1, size, nodeStart, nodeEnd, weight;
+	int res = 0, res2 = 0, cmp = 1, size, nodeStart, nodeEnd, weight,method;
 
 	// Create help string
-	char *help = "\nPossibles commands for this programm : \n\t1: create graph : graph creation\n\t2: load graph : graph loading from a text file\n\t3: add neighbour : insertion of a neighbour in the graph\n\t4: add edge : insertion of an edge in the graph\n\t5: remove neighbour : deletion of a neighbour from the graph\n\t6: remove edge : deletion of an edge from the graph\n\t7: view graph : graph display\n\t8: save graph : graph saving in the text format\n\t9: help : display know commands\n\t10: quit : exit the program\n";
+	char *help = "\nPossibles commands for this programm : \n\t1: create graph : graph creation\n\t2: load graph : graph loading from a text file\n\t3: add neighbour : insertion of a neighbour in the graph\n\t4: add edge : insertion of an edge in the graph\n\t5: remove neighbour : deletion of a neighbour from the graph\n\t6: remove edge : deletion of an edge from the graph\n\t7: view graph : graph display\n\t8: save graph : graph saving in the text format\n\t9: help : display know commands\n\t10: compute : compute the maximum flow in a flow network\n\t11: quit : exit the program\n";
 
 	// Welcome message
 	printf("----------<>  IT'S A GRAPH!  <>----------\n- A program to create/modify/save graph -\n-----------------------------------------\n%s",help);
@@ -276,11 +247,58 @@ int main() {
 				case 9:
 					printf("%s",help);
 					break;
-				// Exit program
+				// Compute the maximum flow in a flow network
 				case 10:
-					cmp = 0;
+					if (!was_created)
+					{
+						printf("Error the graph must be created before !\n");
+						exit(1);
+					}
+
+					printf("\t\tEnter the number of the algorithm you want to use :\n\t\t\t1 : BFS.\n\t\t\t2 : DFS.\n\t\t\t3 : Floyd-Warshall. \n");
+					res2 = scanf("%s",string2);
+					method = atoi(string2);
+					if (method == 0 || res2 == 0)
+					{
+						printf("Error the given answer wasn't a number.\n");
+						exit(1);
+					}
+
+					if(method < 1 || method > 3)
+					{
+						printf("Error the given answer needs to be between 1 and 3.\n");
+						exit(1);
+					}
+
+
+					printf("Enter the number of the starting node :\n");
+					res2 = scanf("%s",string2);
+
+					if (atoi(string2) == 0 || res2 == 0)
+					{
+						printf("Error the given answer wasn't a number.\n");
+						exit(1);
+					}
+
+					nodeStart = atoi(string2);
+
+					printf("Enter the number of the ending node :\n");
+					res2 = scanf("%s",string2);
+
+					if (atoi(string2) == 0 || res2 == 0)
+					{
+						printf("Error the given answer wasn't a number.\n");
+						exit(1);
+					}
+
+					nodeEnd = atoi(string2);
+
 					break;
-				// Wrong command
+                    // Exit program
+                case 11:
+                    cmp = 0;
+                    break;
+                    // Wrong command
 				default:
 					printf("Error unknown command !\n");
 					printf("%s",help);
@@ -290,9 +308,9 @@ int main() {
 
 	// Free memory
 	if (was_created)
-	{*/
+	{
 		destroy_graph(&g);
-	/*}
+	}
 	free(string);
-	free(string2);*/
+	free(string2);
 }
