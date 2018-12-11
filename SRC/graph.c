@@ -806,8 +806,6 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 	{
 		printf("\nPATH:");
 		linkedlist_dump(path);
-		printf("\nLASTPATH:");
-		linkedlist_dump(lastpath);
 
 		if (same_path(path, lastpath))
 		{
@@ -835,17 +833,16 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 			// Update the residual graph
 			while (l->next != NULL)
 			{
-				Neighbour *node = g_residual.adjList[l->value].list;
-				Neighbour *node2 = g_residual.adjList[l->next->value].list;
-
-				while (node != NULL)
+				// Update the first member of an edge
+				Neighbour *first = g_residual.adjList[l->value].list;
+				while (first != NULL)
 				{
-					if (node->neighbour == l->next->value)
+					if (first->neighbour == l->next->value)
 					{
-						int capacity = node->weight - flowMatrix[l->value][l->next->value];
+						int capacity = first->weight - flowMatrix[l->value][l->next->value];
 						if (capacity > 0)
 						{
-							node->weightResidual = capacity;
+							first->weightResidual = capacity;
 						}
 						else
 						{
@@ -853,29 +850,52 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 						}
 					}
 
-					node = node->nextNeighbour;
+					first = first->nextNeighbour;
 				}
 
-				int value = 0;
-				bool notbreak = true;
-				while (node2 != NULL)
+				// Update the second member of the edge
+				Neighbour *second = g_residual.adjList[l->next->value].list;
+				int brek = 0;
+				while (second != NULL)
 				{
-					if (node2->neighbour == l->value)
+					if (second->neighbour == l->value)
 					{
-						node2->weightResidual += -flowMatrix[l->next->value][l->value];
-						notbreak = false;
-						break;
-					}
-					else
-					{
-						value = -flowMatrix[l->next->value][l->value];
+						if (second->weight > 0)
+						{
+							second->weightResidual = second->weight - flowMatrix[l->next->value][l->value];
+							second->weight = second->weightResidual;
+
+							Neighbour *firstagain = g_residual.adjList[l->value].list;
+							while (firstagain != NULL)
+							{
+								if (firstagain->neighbour == l->next->value)
+								{
+									firstagain->weightResidual = -firstagain->weightResidual;
+									firstagain->weight = firstagain->weightResidual;
+									break;
+								}
+
+								firstagain = firstagain->nextNeighbour;
+							}
+
+							brek = 1;
+							break;
+						}
+						else
+						{
+							remove_edge(&g_residual, l->next->value+1, l->value+1);
+							add_edge(&g_residual, l->next->value+1, l->value+1, false, flowMatrix[l->next->value][l->value]);
+							brek = 2;
+							break;
+						}
 					}
 
-					node2 = node2->nextNeighbour;
+					second = second->nextNeighbour;
 				}
 
-				if (notbreak) {
-					// add_edge(&g_residual, l->next->value+1, l->value+1, value);
+				if (brek == 0)
+				{
+					add_edge(&g_residual, l->next->value+1, l->value+1, false, flowMatrix[l->next->value][l->value]);
 				}
 
 				l = l->next;
@@ -951,7 +971,7 @@ bool compute_residual_capacity(Graph *g, linkedlist *path, int **flowMatrix, int
 				capacity = node->weight - flowMatrix[l->value][l->next->value];
 				if (capacity <= 0)
 				{
-					return false;
+					capacity = -capacity;
 				}
 
 				// If computed capacity is smaller than the last computed capacity
@@ -988,17 +1008,22 @@ void update_flow_matrix(Graph *g, linkedlist *path, int **flowMatrix, int *min_r
 		{
 			if (node->neighbour == l->next->value)
 			{
-				// Send flow along the path
-				flowMatrix[l->value][l->next->value] += *min_residual_capacity;
-
-				// The flow might be return later
-				if (flowMatrix[l->next->value][l->value] < *min_residual_capacity)
+				if (flowMatrix[l->value][l->next->value] < 0)
 				{
-					flowMatrix[l->next->value][l->value] = -*min_residual_capacity;
+					// Send flow along the path
+					flowMatrix[l->value][l->next->value] += *min_residual_capacity;
+					// We updated a negative, we can improve the flow back
+					flowMatrix[l->next->value][l->value] += *min_residual_capacity;
 				}
 				else
 				{
-					flowMatrix[l->next->value][l->value] -= *min_residual_capacity;
+					// Send flow along the path
+					flowMatrix[l->value][l->next->value] += *min_residual_capacity;
+					// The flow might be return later
+					if (flowMatrix[l->next->value][l->value] > -flowMatrix[l->value][l->next->value])
+					{
+						flowMatrix[l->next->value][l->value] = -flowMatrix[l->value][l->next->value];
+					}
 				}
 			}
 
