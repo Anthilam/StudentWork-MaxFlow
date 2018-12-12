@@ -293,6 +293,20 @@ int main() {
 
 					nodeEnd = atoi(string2);
 
+					int flow = ford_felkurson_algorithm(&g, nodeStart, nodeEnd, method);
+					if (method == 1)
+					{
+						printf("\nMaximum flow with BFS: %d\n", flow);
+					}
+					else if (method == 2)
+					{
+						printf("\nMaximum flow with DFS: %d\n", flow);
+					}
+					else
+					{
+						printf("\nMaximum flow with Floyd-Warshall: %d\n", flow);
+					}
+
 					break;
                     // Exit program
                 case 11:

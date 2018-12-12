@@ -111,7 +111,7 @@ bool DFS_visit(Graph *g, int nodeEnd, int node, int * color, int * parent, struc
 bool has_path_FloydWarshall(Graph *g, int nodeStart, int nodeEnd, struct linkedlist *path);
 
 
-int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd);
+int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd, int pathmode);
 
 bool compute_residual_capacity(Graph *g, linkedlist *path, int **flowMatrix, int *min_residual_capacity);
 

@@ -292,11 +292,17 @@ void list_saved_file(Graph *g){
 	{
 		printf("The character given is not a string !\n");
 	}
-  //If the name of the file is correct we load it
-  else
+	//If the name of the file is correct we load it
+	else
 	{
 		load_graph(g, path);
 	}
+
+	if (closedir(rep) < 0)
+	{
+		printf("Error while closing SAVE folder\n");
+	}
+	free(string);
 }
 
 /*
@@ -715,6 +721,7 @@ bool has_path_FloydWarshall(Graph *g, int nodeStart, int nodeEnd, struct linkedl
             k = prec[k][nodeEnd-1];
         }while(k != nodeEnd-1);
         linkedlist_add_back(path,k);
+		ret = true;
     }
 
     for(int i = 0; i < g->nbMaxNodes; i++)
@@ -728,7 +735,7 @@ bool has_path_FloydWarshall(Graph *g, int nodeStart, int nodeEnd, struct linkedl
 
 }
 
-int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
+int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd, int pathmode)
 {
 	// Init flow
 	int flow = 0;
@@ -775,7 +782,20 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 	view_graph(&g_residual, stdout, false);
 
 	// Compute path
-	bool has_path = has_path_DFS(&g_residual, nodeStart, nodeEnd, path);
+	bool has_path;
+
+	if (pathmode == 1)
+	{
+		has_path = has_path_BFS(&g_residual, nodeStart, nodeEnd, path);
+	}
+	else if (pathmode == 2)
+	{
+		has_path = has_path_DFS(&g_residual, nodeStart, nodeEnd, path);
+	}
+	else
+	{
+		has_path = has_path_FloydWarshall(&g_residual, nodeStart, nodeEnd, path);
+	}
 
 	while (has_path)
 	{
@@ -790,9 +810,6 @@ int ford_felkurson_algorithm(Graph *g, int nodeStart, int nodeEnd)
 		// Check that residual capacity is > 0
 		int min_residual_capacity = INT_MAX;
 		bool residual_capacity_ok = compute_residual_capacity(&g_residual, path, flowMatrix, &min_residual_capacity);
-
-		printf("residual_capacity_ok : %d\n", residual_capacity_ok);
-		printf("min_residual_capacity : %d\n", min_residual_capacity);
 
 		if (residual_capacity_ok)
 		{
