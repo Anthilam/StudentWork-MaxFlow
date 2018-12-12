@@ -1,8 +1,13 @@
-To compile the project, the users has to be at the root and just enter "make" in a command line.
+To compile the project, go to the root folder and enter "make" in the terminal.
 
-To execute the project, he must be at the root an enter "./BIN/main" in a command line after the compilation.
+You also have the following :
+	make clean : cleans the OBJ folder
+	make veryclean : cleans the OBJ, BIN and LIB folders
 
-The program then will offers some possibilites to the user. He can select one by entering the numbber of this possibilitie.
+To execute the project, go to the root folder an enter "./BIN/main" in the terminal after compiling the project.
+
+The program will begin with a menu displaying all the features given to the user.
+Enter the wanted number in the terminal input and hit ENTER.
 
 There are differents folders :
 	BIN : contains the binary produced by the compilation
@@ -15,6 +20,6 @@ There are differents folders :
 
 The SRC contains different files :
 	graph.c : a library with a lot of methods which are used to do operation on a graph
-	list.c : a library to manipulate the adjency list of the graph
+	list.c : a library to manipulate the adjacency list of the graph
 	linkedlist.c : a library to manipulate the path used in DFS, BFS and Floyw-Warshall
 	main.c : the main program
