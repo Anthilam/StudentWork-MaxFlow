@@ -1,0 +1,9 @@
+# maximum number of nodes
+4
+#directed
+y
+# node: neighbours
+1: (2/40), (3/50), (-1/0)
+2: (3/30), (4/50), (-1/0)
+3: (4/20), (-1/0)
+4: (-1/0)
