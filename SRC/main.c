@@ -11,7 +11,7 @@
 
 int main() {
 
-    Graph g;
+	Graph g;
 	bool was_created = false, isDirected, symmetric;
 	char *string = malloc(sizeof(char *));
 	char *string2 = malloc(sizeof(char *));
@@ -308,11 +308,11 @@ int main() {
 					}
 
 					break;
-                    // Exit program
-                case 11:
-                    cmp = 0;
-                    break;
-                    // Wrong command
+				// Exit program
+				case 11:
+					cmp = 0;
+					break;
+				// Wrong command
 				default:
 					printf("Error unknown command !\n");
 					printf("%s",help);
@@ -320,7 +320,7 @@ int main() {
 		}
 	}
 
-	// Free memory
+	// Memory cleanup
 	if (was_created)
 	{
 		destroy_graph(&g);
