@@ -25,7 +25,7 @@ int main() {
 
 	while (cmp != 0)
 	{
-		printf("Enter the number of the command you want to execute : \n");
+		printf("Enter the number of the command you want to execute (9 for help) : \n");
 		res = scanf("%s", string);
 
 		if (res == 0)
@@ -84,6 +84,7 @@ int main() {
 					was_created = true;
 					list_saved_file(&g);
 					printf("Graph loaded.\n");
+					view_graph(&g, stdout, false);
 					break;
 				// Add node
 				case 3:
